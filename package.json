@@ -1,0 +1,46 @@
+{
+  "name": "atlp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "babel src/*.js -d dist",
+    "start": "node src/index",
+    "dev": "nodemon src/index.js",
+    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@istanbuljs/esm-loader-hook": "^0.2.0",
+    "babel-preset-minify": "^0.5.2",
+    "c8": "^7.12.0",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "dotenv": "^16.0.3",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "request": "^2.88.2",
+    "sinon-chai": "^3.7.0",
+    "swagger": "^0.7.5",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.6.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.8.0",
+    "passport": "^0.6.0",
+    "passport-facebook": "^3.0.0",
+    "passport-jwt": "^4.0.0"
+  }
+}
