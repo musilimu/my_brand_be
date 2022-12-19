@@ -34,4 +34,4 @@ to use mongoose which will help you write to and read from your mongoDb database
    ```s
        npm install && npm run start
    ```
-2. first look at documentation on **_ http://localhost:3000/api/v1/blogs _**
+2. first look at documentation on **_ http://localhost:3000/api/v1/docs _**
