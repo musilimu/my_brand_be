@@ -8,7 +8,7 @@
     "build": "babel src/*.js -d dist",
     "start": "node src/index",
     "dev": "nodemon src/index.js",
-    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
+    "test": "c8 mocha --reporter mocha-badge-generator --timeout 10000  --reporter --recursive 'test/*.spec.js' --exit"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "c8": "^7.12.0",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
+    "coverage-badge-creator": "^1.0.14",
     "dotenv": "^16.0.3",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20",

@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import User from "../database/userModal.js";
 
 const secureRoute = async (req, res, next) => {
-  console.log(req.isAuthenticated());
   let JWTtoken;
 
   if (req.headers.authorization?.startsWith("Bearer")) {
