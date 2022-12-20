@@ -14,10 +14,7 @@ const UserSchema = new Schema(
       required: [true, "userName is required."],
       unique: true,
     },
-    uid: {
-      type: String,
-      unique: true,
-    },
+    uid: { type: String, default: () => Math.random() },
     password: {
       type: String,
       required: [true, "password is required."],

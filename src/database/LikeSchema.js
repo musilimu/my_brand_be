@@ -6,7 +6,6 @@ const LikeSchema = new Schema(
   {
     user: {
       type: ObjectId,
-      unique: true,
       required: true,
       ref: "Users",
     },

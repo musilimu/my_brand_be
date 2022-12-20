@@ -6,6 +6,7 @@ import { config } from "dotenv";
 import { v1BlogRouter } from "./v1/routes/blogs.js";
 import { v1AuthRouter } from "./v1/routes/auth.js";
 import swagerDocs from "./utils/swagger.js";
+
 const app = express();
 
 config();

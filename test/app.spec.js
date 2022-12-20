@@ -1,5 +1,5 @@
-// import sinon from "sinon";
-// import { expect } from "chai";
+import sinon from "sinon";
+import { expect } from "chai";
 import sinonChai from "sinon-chai";
 import chai from "chai";
 import chaiHttp from "chai-http";
@@ -35,7 +35,7 @@ describe("@# test server", () => {
     it("get single blog", (done) => {
       chai
         .request(server)
-        .get("/api/v1/blogs/639b5a2d1582ae895cd52516")
+        .get("/api/v1/blogs/63a154066e166cf15da42031")
         .end((err, res) => {
           res.should.have.status(200);
           // res.body.should.be.a("object");
@@ -51,7 +51,7 @@ describe("@# test server", () => {
           .post("/api/v1/blogs")
           .set(
             "Authorization",
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOWM1ZWJhNDI2OTA0MjA1OGEzODYxMSIsImlhdCI6MTY3MTE5MjQ3MiwiZXhwIjoxNjcxNjI0NDcyfQ.7DC457s9vSVp8ZUml2niQCl6qgsLqsOI3Wyy1HHWDbw"
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTE1MzllNTU1ZmQ4OTAyNTFmMjY4OSIsImlhdCI6MTY3MTUxNzA4NiwiZXhwIjoxNjcxOTQ5MDg2fQ.rD_9TFCx0NHDewelPTrSIojGa2yd7USlV5iT1L0zDAc"
           )
           .send(JSON.parse(data))
           .end((err, res) => {
@@ -70,10 +70,10 @@ describe("@# test server", () => {
         if (err) console.log(err);
         chai
           .request(server)
-          .put("/api/v1/blogs/639c10ef4717ef4e70bf30ab")
+          .put("/api/v1/blogs/63a154066e166cf15da42031")
           .set(
             "Authorization",
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOWM1ZWJhNDI2OTA0MjA1OGEzODYxMSIsImlhdCI6MTY3MTE5MjQ3MiwiZXhwIjoxNjcxNjI0NDcyfQ.7DC457s9vSVp8ZUml2niQCl6qgsLqsOI3Wyy1HHWDbw"
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTE1MzllNTU1ZmQ4OTAyNTFmMjY4OSIsImlhdCI6MTY3MTUxNzA4NiwiZXhwIjoxNjcxOTQ5MDg2fQ.rD_9TFCx0NHDewelPTrSIojGa2yd7USlV5iT1L0zDAc"
           )
           .send(JSON.parse(data))
           .end((err, res) => {
@@ -90,10 +90,10 @@ describe("@# test server", () => {
     it("# Testing DELETE /api/v1/blogs:blogId", (done) => {
       chai
         .request(server)
-        .delete("/api/v1/blogs/639c10ef4717ef4e70bf30ab")
+        .delete("/api/v1/blogs/63a154066e166cf15da42031")
         .set(
           "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOWM1ZWJhNDI2OTA0MjA1OGEzODYxMSIsImlhdCI6MTY3MTE5MjQ3MiwiZXhwIjoxNjcxNjI0NDcyfQ.7DC457s9vSVp8ZUml2niQCl6qgsLqsOI3Wyy1HHWDbw"
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTE1MzllNTU1ZmQ4OTAyNTFmMjY4OSIsImlhdCI6MTY3MTUxNzA4NiwiZXhwIjoxNjcxOTQ5MDg2fQ.rD_9TFCx0NHDewelPTrSIojGa2yd7USlV5iT1L0zDAc"
         )
         .end((err, res) => {
           res.should.have.status(200);
@@ -109,14 +109,22 @@ describe("@# test server", () => {
 });
 
 describe("@# Testing /api/v1/auth/", () => {
+  beforeEach((done) => {
+    User.deleteMany(
+      { email: { $not: "muslimuwitondanishemauwit@gmail.com" } },
+      (err) => {
+        done();
+      }
+    );
+  });
   it("signup the user", (done) => {
     chai
       .request(server)
       .post("/api/v1/auth/signup")
       .send({
-        email: "muslimuwitondanishemauwit@gmail.com",
+        email: `johnd${Math.floor(Math.random() * 1000)}@gmail.com`,
         password: "lorem12345",
-        userName: "muslimuwitondanishemauwit",
+        userName: `doed${Math.floor(Math.random() * 1000)}`,
       })
       .end((err, res) => {
         res.should.have.status(200);

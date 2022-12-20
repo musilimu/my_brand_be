@@ -7,7 +7,7 @@ import {
 } from "../services/blogService.js";
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/blogs:
  *    get:
  *      tags: [blog routes]
@@ -16,13 +16,14 @@ import {
  *        200:
  *          description: blogs get all blogs from our api
  */
+
 const getAllBlogs = async (req, res) => {
   const allBlogs = await getAllBlogsService();
   res.json(allBlogs);
 };
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/blogs/{blogId}:
  *    get:
  *      tags: [blog routes]
@@ -102,6 +103,21 @@ const createOneBlog = async (req, res) => {
  *         description: Created successfuly
  */
 
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}?like=true:
+ *   put:
+ *     summary: update a blog post only admin can update
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *     responses:
+ *       '201':
+ *         description: Created successfuly
+ */
 const updateOneBlog = async (req, res) => {
   try {
     const updatedBlog = await updateOneBlogSevice(req.params.blogId, req);
@@ -112,7 +128,7 @@ const updateOneBlog = async (req, res) => {
 };
 
 /**
- * @openapi
+ * @swagger
  * /api/v1/blogs/{blogId}:
  *    delete:
  *      tags: [blog routes]

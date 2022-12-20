@@ -8,7 +8,7 @@
     "build": "babel src/*.js -d dist",
     "start": "node src/index",
     "dev": "nodemon src/index.js",
-    "test": "c8 mocha --reporter mocha-badge-generator --timeout 10000  --reporter --recursive 'test/*.spec.js' --exit"
+    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "joi": "^17.7.0",
