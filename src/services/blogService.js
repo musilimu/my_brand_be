@@ -1,5 +1,5 @@
-import Blog from "../database/blogsModal.js";
-import { validateBlog, updatingSchema } from "../database/blogSchema.js";
+import Blog from '../database/blogsModal.js';
+import { validateBlog, updatingSchema } from '../database/blogSchema.js';
 
 const getAllBlogsService = async () => {
   const allBlogs = await Blog.find().sort({ createdAt: -1 });
@@ -13,7 +13,7 @@ const getOneBlogSevice = async (blogId) => {
 
 const postOneBlogSevice = async (blog, req) => {
   if (process.env.ADMIN_EMAIL !== req.user.email) {
-    throw new Error("only admin can create a blog");
+    throw new Error('only admin can create a blog');
   }
   const { error, value } = await validateBlog.validate(blog);
   if (error) {
@@ -22,7 +22,7 @@ const postOneBlogSevice = async (blog, req) => {
 
   const createdBlog = new Blog(value);
   await createdBlog.save();
-  return { message: "created a blog successfully", data: createdBlog };
+  return { message: 'created a blog successfully', data: createdBlog };
 };
 
 const updateOneBlogSevice = async (blogId, req) => {
@@ -32,21 +32,21 @@ const updateOneBlogSevice = async (blogId, req) => {
     blog.likes.forEach(async (like, index) => {
       if (like.user == req.user.id) {
         blog.likes.splice(index, 1);
-        msg = { message: "updated a blog successfully", data: blog };
+        msg = { message: 'updated a blog successfully', data: blog };
       }
     });
     if (!msg) {
       blog.likes = [
         ...blog.likes,
         {
-          user: req.user.id,
-        },
+          user: req.user.id
+        }
       ];
     }
 
     await blog.save();
 
-    return { message: "updated a blog successfully", data: blog };
+    return { message: 'updated a blog successfully', data: blog };
   }
 
   if (req.query.comment) {
@@ -56,17 +56,17 @@ const updateOneBlogSevice = async (blogId, req) => {
       ...blog.comments,
       {
         user: req.user.id,
-        text: req.body.text,
-      },
+        text: req.body.text
+      }
     ];
 
     await blog.save();
 
-    return { message: "updated a blog successfully", data: blog };
+    return { message: 'updated a blog successfully', data: blog };
   }
 
   if (process.env.ADMIN_EMAIL !== req.user.email) {
-    throw new Error("only admin can update a blog");
+    throw new Error('only admin can update a blog');
   }
 
   const { title, body } = req.body;
@@ -75,16 +75,16 @@ const updateOneBlogSevice = async (blogId, req) => {
 
   const updatedBlog = await Blog.updateOne({ _id: blogId }, value);
 
-  return { message: "updated a blog successfully", data: updatedBlog };
+  return { message: 'updated a blog successfully', data: updatedBlog };
 };
 
 const deleteOneBlogSevice = async (blogId, req) => {
   if (process.env.ADMIN_EMAIL !== req.user.email) {
-    throw new Error("only admin can delete a blog");
+    throw new Error('only admin can delete a blog');
   }
 
   const deletedMessage = await Blog.findByIdAndDelete(blogId);
-  return { message: "deleted a blog successfully", data: deletedMessage };
+  return { message: 'deleted a blog successfully', data: deletedMessage };
 };
 
 export {
@@ -92,5 +92,5 @@ export {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice,
+  postOneBlogSevice
 };

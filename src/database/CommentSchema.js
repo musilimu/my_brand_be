@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
@@ -7,15 +7,15 @@ const CommentSchema = new Schema(
     user: {
       type: ObjectId,
       required: true,
-      ref: "Users",
+      ref: 'Users'
     },
     text: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
