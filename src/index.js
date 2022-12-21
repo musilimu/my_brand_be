@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import { config } from 'dotenv';
 
 import { v1BlogRouter } from './v1/routes/blogs.js';
@@ -9,14 +10,21 @@ import swagerDocs from './utils/swagger.js';
 
 const app = express();
 
-config();
+if (process.env.NODE_ENV !== 'production') {
+  config();
+}
 
 app.use(
   session({
     secret: process.env.MY_SUPER_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: true },
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_URL,
+      ttl: 14 * 24 * 60 * 60,
+      autoRemove: 'native'
+    })
   })
 );
 app.use(express.json());

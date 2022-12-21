@@ -118,6 +118,29 @@ const createOneBlog = async (req, res) => {
  *       '201':
  *         description: Created successfuly
  */
+
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}?comment=true:
+ *   put:
+ *     summary: update a blog post only admin can update
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *     requestBody:
+ *       description: please fill all required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CommentBlogInput'
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
 const updateOneBlog = async (req, res) => {
   try {
     const updatedBlog = await updateOneBlogSevice(req.params.blogId, req);

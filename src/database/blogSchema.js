@@ -1,4 +1,5 @@
 import Joi from 'joi';
+
 /**
  * @openapi
  * components:
@@ -23,6 +24,14 @@ import Joi from 'joi';
  *        author:
  *          type: string
  *          default: 639c5eba4269042058a38611
+ *    CommentBlogInput:
+ *      type: object
+ *      required:
+ *        - comment
+ *      properties:
+ *        comment:
+ *          type: string
+ *          default: 👍 I love it
  *    CreateBlogResponse:
  *      type: object
  *      properties:
