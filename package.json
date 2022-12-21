@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "type": "module",
   "scripts": {
     "build": "babel src/*.js -d dist",
-    "start": "node src/index",
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
   },
