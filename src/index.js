@@ -8,7 +8,7 @@ import { v1AuthRouter } from './v1/routes/auth.js'
 import swagerDocs from './utils/swagger.js'
 
 const app = express()
-console.log('test prod', process.env.NODE_ENV)
+console.log('test prod', process.env.port)
 if (process.env.NODE_ENV !== 'production') {
   config()
 }
