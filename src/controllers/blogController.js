@@ -3,8 +3,8 @@ import {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice
-} from '../services/blogService.js';
+  postOneBlogSevice,
+} from "../services/blogService.js";
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ const getOneBlog = async (req, res) => {
     res.json(blog);
   } catch (error) {
     res.status(400).json({
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -178,7 +178,7 @@ const deleteOneBlog = async (req, res) => {
     res.json(deletedMessage);
   } catch (error) {
     res.status(400).json({
-      error: error.message
+      error: error.message,
     });
   }
 };

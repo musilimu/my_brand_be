@@ -1,12 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import { config } from 'dotenv';
 
-import { v1BlogRouter } from './v1/routes/blogs.js';
-import { v1AuthRouter } from './v1/routes/auth.js';
-import swagerDocs from './utils/swagger.js';
+import { v1BlogRouter } from "./v1/routes/blogs.js";
+import { v1AuthRouter } from "./v1/routes/auth.js";
+import swagerDocs from "./utils/swagger.js";
 
 const app = express();
 
@@ -20,24 +19,19 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_URL,
-      ttl: 14 * 24 * 60 * 60,
-      autoRemove: 'native'
-    })
   })
 );
 app.use(express.json());
-app.use(express.static('public'));
-mongoose.set('strictQuery', true);
+app.use(express.static("public"));
+mongoose.set("strictQuery", true);
 mongoose
   .connect(process.env.DB_URL, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
   })
-  .then(() => console.log('connected to db'));
+  .then(() => console.log("connected to db"));
 
-app.use('/api/v1/blogs', v1BlogRouter);
-app.use('/api/v1/auth', v1AuthRouter);
+app.use("/api/v1/blogs", v1BlogRouter);
+app.use("/api/v1/auth", v1AuthRouter);
 
 app.listen(process.env.port || 3000, () => {
   swagerDocs(app, 3000);

@@ -1,4 +1,4 @@
-import { createUserService, loginUserSevice } from '../services/userService.js';
+import { createUserService, loginUserSevice } from "../services/userService.js";
 /**
  * @swagger
  * /api/v1/auth/signup:
@@ -23,8 +23,8 @@ const createUser = async (req, res) => {
     res.json(createdUser);
   } catch (error) {
     res.status(400).json({
-      msg: 'Email or Username are being used by another account',
-      error: error.message
+      msg: "Email or Username are being used by another account",
+      error: error.message,
     });
   }
 };
@@ -52,8 +52,8 @@ const loginUser = async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(400).json({
-      msg: 'Credentials doesn\'t match any account',
-      error: error.message
+      msg: "Credentials doesn't match any account",
+      error: error.message,
     });
   }
 };

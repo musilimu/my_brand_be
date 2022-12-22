@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {
-    "node": "14.x"
-  },
   "type": "module",
   "scripts": {
     "build": "babel src/*.js -d dist",
@@ -32,12 +29,6 @@
     "chai-http": "^4.3.0",
     "coverage-badge-creator": "^1.0.14",
     "dotenv": "^16.0.3",
-    "eslint": "^8.30.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.6.0",
-    "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
     "request": "^2.88.2",
