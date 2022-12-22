@@ -3,8 +3,8 @@ import {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice,
-} from "../services/blogService.js";
+  postOneBlogSevice
+} from '../services/blogService.js'
 
 /**
  * @swagger
@@ -18,9 +18,9 @@ import {
  */
 
 const getAllBlogs = async (req, res) => {
-  const allBlogs = await getAllBlogsService();
-  res.json(allBlogs);
-};
+  const allBlogs = await getAllBlogsService()
+  res.json(allBlogs)
+}
 
 /**
  * @swagger
@@ -46,14 +46,14 @@ const getAllBlogs = async (req, res) => {
 
 const getOneBlog = async (req, res) => {
   try {
-    const blog = await getOneBlogSevice(req.params.blogId);
-    res.json(blog);
+    const blog = await getOneBlogSevice(req.params.blogId)
+    res.json(blog)
   } catch (error) {
     res.status(400).json({
-      error: error.message,
-    });
+      error: error.message
+    })
   }
-};
+}
 /**
  * @swagger
  * /api/v1/blogs/:
@@ -74,12 +74,12 @@ const getOneBlog = async (req, res) => {
 
 const createOneBlog = async (req, res) => {
   try {
-    const createdBlog = await postOneBlogSevice(req.body, req);
-    res.json(createdBlog);
+    const createdBlog = await postOneBlogSevice(req.body, req)
+    res.json(createdBlog)
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message })
   }
-};
+}
 /**
  * @swagger
  * /api/v1/blogs/{blogId}:
@@ -143,12 +143,12 @@ const createOneBlog = async (req, res) => {
  */
 const updateOneBlog = async (req, res) => {
   try {
-    const updatedBlog = await updateOneBlogSevice(req.params.blogId, req);
-    res.send(updatedBlog);
+    const updatedBlog = await updateOneBlogSevice(req.params.blogId, req)
+    res.send(updatedBlog)
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message })
   }
-};
+}
 
 /**
  * @swagger
@@ -174,13 +174,13 @@ const updateOneBlog = async (req, res) => {
 
 const deleteOneBlog = async (req, res) => {
   try {
-    const deletedMessage = await deleteOneBlogSevice(req.params.blogId, req);
-    res.json(deletedMessage);
+    const deletedMessage = await deleteOneBlogSevice(req.params.blogId, req)
+    res.json(deletedMessage)
   } catch (error) {
     res.status(400).json({
-      error: error.message,
-    });
+      error: error.message
+    })
   }
-};
+}
 
-export { deleteOneBlog, createOneBlog, updateOneBlog, getAllBlogs, getOneBlog };
+export { deleteOneBlog, createOneBlog, updateOneBlog, getAllBlogs, getOneBlog }

@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi'
 
 /**
  * @swagger
@@ -27,11 +27,11 @@ const schema = Joi.object({
   userName: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email({
     minDomainSegments: 2,
-    tlds: { allow: ["com", "net", "yahoo", "co", "io"] },
+    tlds: { allow: ['com', 'net', 'yahoo', 'co', 'io'] }
   }),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
   avatar: Joi.string().min(200),
-  uid: Joi.string(),
-});
+  uid: Joi.string()
+})
 
-export { schema as validateUser };
+export { schema as validateUser }

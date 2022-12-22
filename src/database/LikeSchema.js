@@ -1,18 +1,18 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
+const ObjectId = Schema.ObjectId
 
 const LikeSchema = new Schema(
   {
     user: {
       type: ObjectId,
       required: true,
-      ref: "Users",
-    },
+      ref: 'Users'
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
-);
+)
 
-export default LikeSchema;
+export default LikeSchema
