@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "babel src/*.js -d dist && npm run start",
+    "build": "npm run start",
     "start": "node ./src/index.js",
     "dev": "nodemon src/index.js",
     "bun": "webpack",
