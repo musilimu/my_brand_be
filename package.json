@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "babel src/*.js -d dist",
-    "start": "node src/index.js",
+    "start": "node ./src/index.js",
     "dev": "nodemon src/index.js",
     "bun": "webpack",
     "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
