@@ -22,7 +22,7 @@ const postOneBlogSevice = async (blog, req) => {
 
   const createdBlog = new Blog(value)
   await createdBlog.save()
-  return { statusCode: 200, message: `created a blog ${createdBlog._id}  successfully`, data: createdBlog }
+  return { statusCode: 201, message: `created a blog ${createdBlog._id}  successfully`, data: createdBlog }
 }
 
 const updateOneBlogSevice = async (blogId, req) => {
@@ -30,9 +30,9 @@ const updateOneBlogSevice = async (blogId, req) => {
     const blog = await Blog.findById(blogId)
     let msg
     blog.likes.forEach(async (like, index) => {
-      if (like.user === req.user.id) {
+      if (like.user == req.user.id) {
         blog.likes.splice(index, 1)
-        msg = { message: 'updated a blog successfully', data: blog }
+        msg = { statusCode: 200, message: `update a blog ${blog._id}  successfully`, data: blog }
       }
     })
     if (!msg) {
@@ -45,8 +45,7 @@ const updateOneBlogSevice = async (blogId, req) => {
     }
 
     await blog.save()
-
-    return { message: 'updated a blog successfully', data: blog }
+    return { statusCode: 200, message: `update a blog ${blog._id}  successfully`, data: blog }
   }
 
   if (req.query.comment) {
