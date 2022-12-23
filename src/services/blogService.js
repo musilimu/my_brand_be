@@ -3,12 +3,12 @@ import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 
 const getAllBlogsService = async () => {
   const allBlogs = await Blog.find().sort({ createdAt: -1 })
-  return allBlogs
+  return { statusCode: 200, message: 'List of all blogs from our database', data: allBlogs }
 }
 
 const getOneBlogSevice = async (blogId) => {
   const blog = await Blog.findById(blogId)
-  return blog
+  return { statusCode: 200, message: `blog ${blogId} from our database`, data: blog }
 }
 
 const postOneBlogSevice = async (blog, req) => {
@@ -22,7 +22,7 @@ const postOneBlogSevice = async (blog, req) => {
 
   const createdBlog = new Blog(value)
   await createdBlog.save()
-  return { message: 'created a blog successfully', data: createdBlog }
+  return { statusCode: 200, message: `created a blog ${createdBlog._id}  successfully`, data: createdBlog }
 }
 
 const updateOneBlogSevice = async (blogId, req) => {
@@ -30,7 +30,7 @@ const updateOneBlogSevice = async (blogId, req) => {
     const blog = await Blog.findById(blogId)
     let msg
     blog.likes.forEach(async (like, index) => {
-      if (like.user == req.user.id) {
+      if (like.user === req.user.id) {
         blog.likes.splice(index, 1)
         msg = { message: 'updated a blog successfully', data: blog }
       }

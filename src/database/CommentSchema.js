@@ -6,7 +6,6 @@ const CommentSchema = new Schema(
   {
     user: {
       type: ObjectId,
-      required: true,
       ref: 'Users'
     },
     text: {
