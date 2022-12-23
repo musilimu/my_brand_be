@@ -5,10 +5,8 @@ import { config } from 'dotenv'
 
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
-import swagerDocs from './utils/swagger.js'
 
-const app = express()
-console.log('test prod', process.env.port)
+const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
   config()
 }
@@ -21,6 +19,7 @@ app.use(
     cookie: { secure: true }
   })
 )
+
 app.use(express.json())
 app.use(express.static('public'))
 mongoose.set('strictQuery', true)
@@ -32,10 +31,5 @@ mongoose
 
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)
-
-app.listen(process.env.port || 3000, () => {
-  swagerDocs(app, 3000)
-  console.log(`server started listening on port ${process.env.port || 3000}`)
-})
 
 export default app
