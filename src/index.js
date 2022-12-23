@@ -5,7 +5,6 @@ import { config } from 'dotenv'
 
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
-import Blog from './database/blogsModal.js'
 
 const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
@@ -29,9 +28,7 @@ mongoose
     useNewUrlParser: true
   })
   .then(() => console.log('connected to db'))
-Blog.deleteMany().then(re => {
-  console.log(re)
-})
+
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)
 

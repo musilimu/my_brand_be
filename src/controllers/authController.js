@@ -1,4 +1,4 @@
-import { createUserService, loginUserSevice } from '../services/userService.js'
+import { createUserService, loginUserSevice, getAllUsersService } from '../services/userService.js'
 /**
  * @swagger
  * /api/v1/auth/signup:
@@ -20,9 +20,9 @@ import { createUserService, loginUserSevice } from '../services/userService.js'
 const createUser = async (req, res) => {
   try {
     const createdUser = await createUserService(req.body)
-    res.json(createdUser)
+    res.status(201).json(createdUser)
   } catch (error) {
-    res.status(400).json({
+    res.status(401).json({
       msg: 'Email or Username are being used by another account',
       error: error.message
     })
@@ -51,11 +51,21 @@ const loginUser = async (req, res) => {
     const user = await loginUserSevice(req.body)
     res.json(user)
   } catch (error) {
-    res.status(400).json({
+    res.status(401).json({
       msg: "Credentials doesn't match any account",
       error: error.message
     })
   }
 }
-
-export { createUser, loginUser }
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await getAllUsersService(req)
+    res.status(201).json(users)
+  } catch (error) {
+    res.status(401).json({
+      msg: 'users not fund',
+      error: error.message
+    })
+  }
+}
+export { createUser, loginUser, getAllUsers }

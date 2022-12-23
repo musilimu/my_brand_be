@@ -60,7 +60,6 @@ const updateOneBlogSevice = async (blogId, req) => {
     ]
 
     await blog.save()
-
     return { message: 'updated a blog successfully', data: blog }
   }
 

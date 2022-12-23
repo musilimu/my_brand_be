@@ -12,25 +12,37 @@ const createUserService = async (user) => {
   const myUser = await User.findOne({ email })
   if (myUser && (await bcrypt.compare(password, myUser.password))) {
     return {
-      message: 'user created successfully',
+      statusCode: 201,
+      message: 'user account created successfully',
       data: {
         email,
-        _id: myUser.id,
-        token: generateJWT(myUser.id)
+        _id: user.id,
+        token: generateJWT(user.id)
       }
     }
   }
 }
+const getAllUsersService = async (req) => {
+  if (process.env.ADMIN_EMAIL !== req.user.email) {
+    throw new Error('only admin can update a blog')
+  }
 
+  const users = await User.find()
+  return { statusCode: 200, message: 'all users sent  successfully', data: users }
+}
 const loginUserSevice = async (body) => {
   const { email, password } = body
   const user = await User.findOne({ email })
 
   if (user && (await bcrypt.compare(password, user.password))) {
     return {
-      email,
-      _id: user.id,
-      token: generateJWT(user.id)
+      statusCode: 200,
+      message: 'you are now authorized ',
+      data: {
+        email,
+        _id: user.id,
+        token: generateJWT(user.id)
+      }
     }
   }
   throw new Error('account not found')
@@ -41,4 +53,4 @@ const generateJWT = (id) =>
     expiresIn: '5d'
   })
 
-export { loginUserSevice, createUserService, generateJWT }
+export { loginUserSevice, createUserService, generateJWT, getAllUsersService }

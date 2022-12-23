@@ -19,7 +19,7 @@ import {
 
 const getAllBlogs = async (req, res) => {
   const allBlogs = await getAllBlogsService()
-  res.json(allBlogs)
+  res.status(200).json(allBlogs)
 }
 
 /**
@@ -47,7 +47,7 @@ const getAllBlogs = async (req, res) => {
 const getOneBlog = async (req, res) => {
   try {
     const blog = await getOneBlogSevice(req.params.blogId)
-    res.json(blog)
+    res.status(200).json(blog)
   } catch (error) {
     res.status(400).json({
       error: error.message
@@ -146,7 +146,7 @@ const updateOneBlog = async (req, res) => {
     const updatedBlog = await updateOneBlogSevice(req.params.blogId, req)
     res.send(updatedBlog)
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    res.status(401).json({ error: error.message })
   }
 }
 
@@ -168,16 +168,16 @@ const updateOneBlog = async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/blog'
- *        404:
+ *        401:
  *          description: not found
  */
 
 const deleteOneBlog = async (req, res) => {
   try {
     const deletedMessage = await deleteOneBlogSevice(req.params.blogId, req)
-    res.json(deletedMessage)
+    res.status(200).json(deletedMessage)
   } catch (error) {
-    res.status(400).json({
+    res.status(401).json({
       error: error.message
     })
   }
