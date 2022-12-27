@@ -1,14 +1,49 @@
 import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
+import { LikeModal } from '../database/LikeSchema.js'
 
-const getAllBlogsService = async () => {
-  const allBlogs = await Blog.find().sort({ createdAt: -1 })
-  return { statusCode: 200, message: 'List of all blogs from our database', data: allBlogs }
+const getAllBlogsService = async (req) => {
+  // Blog.deleteMany().then(e => {
+  // })
+  const allBlogs = await fetchByParams(req.query)
+  return {
+    statusCode: 200,
+    message: 'List of all blogs from our database',
+    data: allBlogs
+  }
+}
+const sortBlogs = (sortStr = 'created_at:asc') => {
+  if (sortStr && sortStr === 'created_at:asc') {
+    return 1
+  }
+  if (sortStr && sortStr === 'created_at:desc') {
+    return -1
+  }
+  throw new Error('server failed to sort based on query provided')
+}
+const fetchByParams = async (query) => {
+  const { sort, limit, offset, search, fields } = query
+  const returnFields = fields.split(',').reduce((fieldSets, field) => {
+    fieldSets[field] = 1
+    return fieldSets
+  }, {})
+
+  const allBlogs = await Blog.find({ title: new RegExp(search) }, returnFields).sort({ createdAt: sortBlogs(sort) }).skip(+offset).limit(+limit)
+  return allBlogs
 }
 
-const getOneBlogSevice = async (blogId) => {
-  const blog = await Blog.findById(blogId)
-  return { statusCode: 200, message: `blog ${blogId} from our database`, data: blog }
+const getOneBlogSevice = async (blogId, req) => {
+  const { fields } = req.query
+  const returnFields = fields.split(',').reduce((fieldSets, field) => {
+    fieldSets[field] = 1
+    return fieldSets
+  }, {})
+  const blog = await Blog.findById(blogId, returnFields)
+  return {
+    statusCode: 200,
+    message: `blog ${blogId} from our database`,
+    data: blog
+  }
 }
 
 const postOneBlogSevice = async (blog, req) => {
@@ -22,37 +57,30 @@ const postOneBlogSevice = async (blog, req) => {
 
   const createdBlog = new Blog(value)
   await createdBlog.save()
-  return { statusCode: 201, message: `created a blog ${createdBlog._id}  successfully`, data: createdBlog }
+  return {
+    statusCode: 201,
+    message: `created a blog ${createdBlog._id}  successfully`,
+    data: createdBlog
+  }
 }
 
 const updateOneBlogSevice = async (blogId, req) => {
   if (req.query.like) {
-    const blog = await Blog.findById(blogId)
-    let msg
-    blog.likes.forEach(async (like, index) => {
-      if (like.user == req.user.id) {
-        blog.likes.splice(index, 1)
-        msg = { statusCode: 200, message: `update a blog ${blog._id}  successfully`, data: blog }
-      }
+    const res = await LikeModal.create({
+      user: req.user.id,
+      blog: blogId
     })
-    if (!msg) {
-      blog.likes = [
-        ...blog.likes,
-        {
-          user: req.user.id
-        }
-      ]
+    return {
+      statusCode: 200,
+      message: `update (liked) a blog ${blogId}  successfully`,
+      data: res
     }
-
-    await blog.save()
-    return { statusCode: 200, message: `update a blog ${blog._id}  successfully`, data: blog }
   }
 
   if (req.query.comment) {
     const blog = await Blog.findById(blogId)
-
     blog.comments = [
-      ...blog.comments,
+      ...blog?.comments,
       {
         user: req.user.id,
         text: req.body.text

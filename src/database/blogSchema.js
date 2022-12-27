@@ -81,7 +81,7 @@ const schema = Joi.object({
   body: Joi.string().required().min(1500),
   banner: Joi.string().dataUri().required().min(200),
   author: Joi.string().alphanum().required(),
-  likes: Joi.array().default([])
+  likes: Joi.array()
 })
 
 const updatingSchema = Joi.object({

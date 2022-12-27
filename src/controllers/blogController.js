@@ -18,8 +18,16 @@ import {
  */
 
 const getAllBlogs = async (req, res) => {
-  const allBlogs = await getAllBlogsService()
-  res.status(200).json(allBlogs)
+  try {
+    const allBlogs = await getAllBlogsService(req)
+    res.status(200).json(allBlogs)
+  } catch (error) {
+    res.status(400).json({
+      error: error.message,
+      details: 'please provide the correct query try reading documentation `http:localhost:3000/api/docs`',
+      statusCode: 400
+    })
+  }
 }
 
 /**
@@ -46,7 +54,7 @@ const getAllBlogs = async (req, res) => {
 
 const getOneBlog = async (req, res) => {
   try {
-    const blog = await getOneBlogSevice(req.params.blogId)
+    const blog = await getOneBlogSevice(req.params.blogId, req)
     res.status(200).json(blog)
   } catch (error) {
     res.status(400).json({

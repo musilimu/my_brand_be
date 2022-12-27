@@ -1,7 +1,6 @@
 import fs from 'fs'
 import crypto from 'crypto'
 import mongoose from 'mongoose'
-import LikeSchema from './LikeSchema.js'
 import CommentSchema from './CommentSchema.js'
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
@@ -15,7 +14,7 @@ const BlogSchema = new Schema(
     title: String,
     body: String,
     banner: String,
-    likes: [LikeSchema],
+    likes: Object,
     comments: [CommentSchema]
   },
   {
