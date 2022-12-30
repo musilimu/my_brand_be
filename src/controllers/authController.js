@@ -1,4 +1,8 @@
-import { createUserService, loginUserSevice, getAllUsersService } from '../services/userService.js'
+import {
+  createUserService,
+  loginUserSevice,
+  getAllUsersService
+} from '../services/userService.js'
 /**
  * @swagger
  * /api/v1/auth/signup:
@@ -22,10 +26,16 @@ const createUser = async (req, res) => {
     const createdUser = await createUserService(req.body)
     res.status(201).json(createdUser)
   } catch (error) {
-    res.status(401).json({
+    let status = 401
+    if (error.message.includes('duplicate key error collection')) {
+      status = 406
+    }
+    const err = {
       msg: 'Email or Username are being used by another account',
-      error: error.message
-    })
+      details: error.message,
+      statusCode: status
+    }
+    res.status(status).json(err)
   }
 }
 /**
@@ -52,8 +62,9 @@ const loginUser = async (req, res) => {
     res.json(user)
   } catch (error) {
     res.status(401).json({
-      msg: "Credentials doesn't match any account",
-      error: error.message
+      details: "Credentials doesn't match any account",
+      error: error.message,
+      statusCode: 401
     })
   }
 }

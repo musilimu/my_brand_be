@@ -3,7 +3,7 @@ import {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice
+  postOneBlogSevice, getLikesServive
 } from '../services/blogService.js'
 
 /**
@@ -52,13 +52,28 @@ const getAllBlogs = async (req, res) => {
  *          description: not found
  */
 
+const getLikes = async (req, res) => {
+  try {
+    const Likes = await getLikesServive(req)
+    res.send(Likes)
+  } catch (error) {
+    res.status(400).json({
+      details: 'try provide id of blog and try again',
+      error: error.message,
+      statusCode: 400
+    })
+  }
+}
+
 const getOneBlog = async (req, res) => {
   try {
     const blog = await getOneBlogSevice(req.params.blogId, req)
     res.status(200).json(blog)
   } catch (error) {
     res.status(400).json({
-      error: error.message
+      details: 'try provide id of blog and try again',
+      error: error.message,
+      statusCode: 400
     })
   }
 }
@@ -185,10 +200,14 @@ const deleteOneBlog = async (req, res) => {
     const deletedMessage = await deleteOneBlogSevice(req.params.blogId, req)
     res.status(200).json(deletedMessage)
   } catch (error) {
-    res.status(401).json({
-      error: error.message
-    })
+    const err = {}
+    if (error.message === 'only admin can delete a blog') {
+      err.details = 'try login agin with admin (emal, password) or your JWT has expired'
+      err.message = error.message
+      err.statusCode = 401
+    }
+    res.status(401).json(err)
   }
 }
 
-export { deleteOneBlog, createOneBlog, updateOneBlog, getAllBlogs, getOneBlog }
+export { deleteOneBlog, createOneBlog, updateOneBlog, getAllBlogs, getOneBlog, getLikes }

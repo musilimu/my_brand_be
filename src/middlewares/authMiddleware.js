@@ -11,16 +11,20 @@ const secureRoute = async (req, res, next) => {
       req.user = await User.findById(decodedData.id).select('-password')
       next()
       return
-    } catch {
-      res.status(404).json({
-        errorMessage: 'not authorized',
-        JWTtoken: req.headers.authorization
+    } catch (err) {
+      res.status(403).json({
+        error: 'not authorized',
+        JWTtoken: req.headers.authorization,
+        details: 'JWT is expired  and not acceptable',
+        statusCode: 403
       })
       return
     }
   }
-  res.status(404).json({
-    errorMessage: 'not authorized'
+  res.status(401).json({
+    error: 'not authorized',
+    statusCode: 401,
+    details: 'try provide your JWT go to `http:localhost:3000/api/v1/auth/login` or create an account if you don\'t have one.'
   })
 }
 

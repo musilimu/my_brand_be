@@ -3,8 +3,6 @@ import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
 
 const getAllBlogsService = async (req) => {
-  // Blog.deleteMany().then(e => {
-  // })
   const allBlogs = await fetchByParams(req.query)
   return {
     statusCode: 200,
@@ -23,18 +21,27 @@ const sortBlogs = (sortStr = 'created_at:asc') => {
 }
 const fetchByParams = async (query) => {
   const { sort, limit, offset, search, fields } = query
-  const returnFields = fields.split(',').reduce((fieldSets, field) => {
+  let returnFields = {}
+  returnFields = fields?.split(',').reduce((fieldSets, field) => {
     fieldSets[field] = 1
     return fieldSets
   }, {})
 
-  const allBlogs = await Blog.find({ title: new RegExp(search) }, returnFields).sort({ createdAt: sortBlogs(sort) }).skip(+offset).limit(+limit)
+  const allBlogs = await Blog.find({ $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] }, returnFields).sort({ createdAt: sortBlogs(sort) }).skip(+offset).limit(+limit)
   return allBlogs
 }
-
+const getLikesServive = async (req) => {
+// LikeModal.find({})
+  const { blogId } = req.params
+  const likes = await LikeModal.find({ blog: blogId })
+  return likes
+  // const
+}
 const getOneBlogSevice = async (blogId, req) => {
   const { fields } = req.query
-  const returnFields = fields.split(',').reduce((fieldSets, field) => {
+
+  let returnFields = {}
+  returnFields = fields?.split(',').reduce((fieldSets, field) => {
     fieldSets[field] = 1
     return fieldSets
   }, {})
@@ -79,8 +86,8 @@ const updateOneBlogSevice = async (blogId, req) => {
 
   if (req.query.comment) {
     const blog = await Blog.findById(blogId)
-    blog.comments = [
-      ...blog?.comments,
+    blog.Likes = [
+      ...blog?.Likes,
       {
         user: req.user.id,
         text: req.body.text
@@ -118,5 +125,5 @@ export {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice
+  postOneBlogSevice, getLikesServive
 }

@@ -5,7 +5,7 @@ import { validateUser } from '../database/userSchema.js'
 
 const createUserService = async (user) => {
   const { error, value } = validateUser.validate(user)
-  if (error) return error.details
+  if (error) return error.details[0]
   const createdUser = new User(user)
   await createdUser.save()
   const { email, password } = user
@@ -16,8 +16,7 @@ const createUserService = async (user) => {
       message: 'user account created successfully',
       data: {
         email,
-        _id: user.id,
-        token: generateJWT(user.id)
+        _id: user.id
       }
     }
   }
@@ -28,7 +27,11 @@ const getAllUsersService = async (req) => {
   }
 
   const users = await User.find()
-  return { statusCode: 200, message: 'all users sent  successfully', data: users }
+  return {
+    statusCode: 200,
+    message: 'all users sent  successfully',
+    data: users
+  }
 }
 const loginUserSevice = async (body) => {
   const { email, password } = body
@@ -41,6 +44,7 @@ const loginUserSevice = async (body) => {
       data: {
         email,
         _id: user.id,
+        permision: [process.env.ADMIN_EMAIL === user.email && 'admin'],
         token: generateJWT(user.id)
       }
     }
