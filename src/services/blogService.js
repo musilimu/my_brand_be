@@ -27,15 +27,19 @@ const fetchByParams = async (query) => {
     return fieldSets
   }, {})
 
-  const allBlogs = await Blog.find({ $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] }, returnFields).sort({ createdAt: sortBlogs(sort) }).skip(+offset).limit(+limit)
+  const allBlogs = await Blog.find(
+    { $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] },
+    returnFields
+  )
+    .sort({ createdAt: sortBlogs(sort) })
+    .skip(+offset)
+    .limit(+limit)
   return allBlogs
 }
 const getLikesServive = async (req) => {
-// LikeModal.find({})
   const { blogId } = req.params
   const likes = await LikeModal.find({ blog: blogId })
   return likes
-  // const
 }
 const getOneBlogSevice = async (blogId, req) => {
   const { fields } = req.query
@@ -62,7 +66,7 @@ const postOneBlogSevice = async (blog, req) => {
     throw new Error(error.details[0].message)
   }
 
-  const createdBlog = new Blog(value)
+  const createdBlog = new Blog({ ...value, author: req.user.id })
   await createdBlog.save()
   return {
     statusCode: 201,
@@ -72,32 +76,6 @@ const postOneBlogSevice = async (blog, req) => {
 }
 
 const updateOneBlogSevice = async (blogId, req) => {
-  if (req.query.like) {
-    const res = await LikeModal.create({
-      user: req.user.id,
-      blog: blogId
-    })
-    return {
-      statusCode: 200,
-      message: `update (liked) a blog ${blogId}  successfully`,
-      data: res
-    }
-  }
-
-  if (req.query.comment) {
-    const blog = await Blog.findById(blogId)
-    blog.Likes = [
-      ...blog?.Likes,
-      {
-        user: req.user.id,
-        text: req.body.text
-      }
-    ]
-
-    await blog.save()
-    return { message: 'updated a blog successfully', data: blog }
-  }
-
   if (process.env.ADMIN_EMAIL !== req.user.email) {
     throw new Error('only admin can update a blog')
   }
@@ -111,6 +89,33 @@ const updateOneBlogSevice = async (blogId, req) => {
   return { message: 'updated a blog successfully', data: updatedBlog }
 }
 
+const postCommentSevice = async (req) => {
+  if (req.body.text.trim() === '') throw new Error('please provide content')
+  const blog = await Blog.findById(req.params.blogId)
+  blog.comments = [
+    ...blog?.comments,
+    {
+      user: req.user.id,
+      text: req.body.text
+    }
+  ]
+
+  await blog.save()
+  return { message: 'updated a blog successfully', data: blog }
+}
+
+const likeBlogSevice = async (req) => {
+  const res = await LikeModal.create({
+    user: req.user.id,
+    blog: req.params.blogId
+  })
+  return {
+    statusCode: 200,
+    message: `update (liked) a blog ${req.params.blogId}  successfully`,
+    data: res
+  }
+}
+
 const deleteOneBlogSevice = async (blogId, req) => {
   if (process.env.ADMIN_EMAIL !== req.user.email) {
     throw new Error('only admin can delete a blog')
@@ -119,11 +124,39 @@ const deleteOneBlogSevice = async (blogId, req) => {
   const deletedMessage = await Blog.findByIdAndDelete(blogId)
   return { message: 'deleted a blog successfully', data: deletedMessage }
 }
+const likeCommentService = async (req) => {
+  const blog = await Blog.findById(req.params.blogId)
+  const comment = blog.comments.find(({ _id }) => _id == req.params.commentId)
+  if (comment.likes.includes(req.user.id)) {
+    comment.likes.splice(comment.likes.indexOf(comment.likes), 1)
+  } else {
+    comment.likes = [...comment.likes, req.user.id]
+  }
+  await blog.save()
+  return { message: 'updated a blog successfully', data: blog }
+}
+
+const deleteCommentService = async (req) => {
+  if (process.env.ADMIN_EMAIL !== req.user.email) {
+    throw new Error('only admin can update a blog')
+  }
+
+  const blog = await Blog.findById(req.params.blogId)
+  const comments = blog.comments.filter(({ _id }) => _id != req.params.commentId)
+  blog.comments = comments
+  await blog.save()
+  return { statusCode: 200, message: '`deleted a comment successfully` => updated a blog by removing a comment', data: blog }
+}
 
 export {
   getAllBlogsService,
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice, getLikesServive
+  postOneBlogSevice,
+  deleteCommentService,
+  getLikesServive,
+  postCommentSevice,
+  likeBlogSevice,
+  likeCommentService
 }

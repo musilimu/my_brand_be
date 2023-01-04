@@ -4,7 +4,9 @@ import {
   createOneBlog,
   deleteOneBlog,
   updateOneBlog,
-  getOneBlog, getLikes
+  getOneBlog,
+  getLikes,
+  postComment, likeBlog, likeComment, deleteComment
 } from '../../controllers/blogController.js'
 import secureRoute from '../../middlewares/authMiddleware.js'
 const router = express.Router()
@@ -17,4 +19,8 @@ router
   .delete(secureRoute, deleteOneBlog)
 
 router.get('/:blogId/likes', getLikes)
+router.post('/:blogId/likes', secureRoute, likeBlog)
+router.post('/:blogId/comments', secureRoute, postComment)
+router.post('/:blogId/comments/:commentId/likes', secureRoute, likeComment)
+router.delete('/:blogId/comments/:commentId', secureRoute, deleteComment)
 export { router as v1BlogRouter }

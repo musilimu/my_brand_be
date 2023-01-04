@@ -3,7 +3,9 @@ import {
   getOneBlogSevice,
   deleteOneBlogSevice,
   updateOneBlogSevice,
-  postOneBlogSevice, getLikesServive
+  postOneBlogSevice,
+  getLikesServive,
+  postCommentSevice, likeBlogSevice, likeCommentService, deleteCommentService
 } from '../services/blogService.js'
 
 /**
@@ -24,7 +26,8 @@ const getAllBlogs = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error: error.message,
-      details: 'please provide the correct query try reading documentation `http:localhost:3000/api/docs`',
+      details:
+        'please provide the correct query try reading documentation `http:localhost:3000/api/docs`',
       statusCode: 400
     })
   }
@@ -55,7 +58,7 @@ const getAllBlogs = async (req, res) => {
 const getLikes = async (req, res) => {
   try {
     const Likes = await getLikesServive(req)
-    res.send(Likes)
+    res.json(Likes)
   } catch (error) {
     res.status(400).json({
       details: 'try provide id of blog and try again',
@@ -64,6 +67,22 @@ const getLikes = async (req, res) => {
     })
   }
 }
+
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}/likes:
+ *   get:
+ *     summary: get all likes of a blog
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
 
 const getOneBlog = async (req, res) => {
   try {
@@ -100,7 +119,12 @@ const createOneBlog = async (req, res) => {
     const createdBlog = await postOneBlogSevice(req.body, req)
     res.json(createdBlog)
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    res.status(400).json({
+      error: error.message,
+      statusCode: 400,
+      datails:
+        'please try fill all required fields read `http://localhost:3000/api/v1/docs`'
+    })
   }
 }
 /**
@@ -128,24 +152,8 @@ const createOneBlog = async (req, res) => {
 
 /**
  * @swagger
- * /api/v1/blogs/{blogId}?like=true:
- *   put:
- *     summary: update a blog post only admin can update
- *     tags: [blog routes]
- *     parameters:
- *      - name: blogId
- *        in: path
- *        description: provide blogId
- *        required: true
- *     responses:
- *       '201':
- *         description: Created successfuly
- */
-
-/**
- * @swagger
- * /api/v1/blogs/{blogId}?comment=true:
- *   put:
+ * /api/v1/blogs/{blogId}/comments:
+ *   post:
  *     summary: update a blog post only admin can update
  *     tags: [blog routes]
  *     parameters:
@@ -164,6 +172,68 @@ const createOneBlog = async (req, res) => {
  *       '201':
  *         description: Commented successfuly
  */
+
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}/likes:
+ *   post:
+ *     summary: likes a blog login is required first
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
+const postComment = async (req, res) => {
+  try {
+    const updatedBlog = await postCommentSevice(req)
+    res.send(updatedBlog)
+  } catch (error) {
+    res.status(401).json({ error: error.message })
+  }
+}
+
+const likeBlog = async (req, res) => {
+  try {
+    const updatedBlog = await likeBlogSevice(req)
+    res.send(updatedBlog)
+  } catch (error) {
+    res.status(401).json({ error: error.message })
+  }
+}
+
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}/comments/{commentId}/likes:
+ *   post:
+ *     summary: like a comment on a blog, login is required first
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *      - name: commentId
+ *        in: path
+ *        description: provide commentId
+ *        required: true
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
+const likeComment = async (req, res) => {
+  try {
+    const updatedBlog = await likeCommentService(req)
+    res.send(updatedBlog)
+  } catch (error) {
+    res.status(401).json({ error: error.message })
+  }
+}
+
 const updateOneBlog = async (req, res) => {
   try {
     const updatedBlog = await updateOneBlogSevice(req.params.blogId, req)
@@ -172,7 +242,33 @@ const updateOneBlog = async (req, res) => {
     res.status(401).json({ error: error.message })
   }
 }
-
+/**
+ * @swagger
+ * /api/v1/blogs/{blogId}/comments/{commentId}:
+ *   delete:
+ *     summary: delete a comment on a blog, login is required with admin credentials first
+ *     tags: [blog routes]
+ *     parameters:
+ *      - name: blogId
+ *        in: path
+ *        description: provide blogId
+ *        required: true
+ *      - name: commentId
+ *        in: path
+ *        description: provide commentId
+ *        required: true
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
+const deleteComment = async (req, res) => {
+  try {
+    const updatedBlog = await deleteCommentService(req)
+    res.status(200).send(updatedBlog)
+  } catch (error) {
+    res.status(401).json({ error: error.message })
+  }
+}
 /**
  * @swagger
  * /api/v1/blogs/{blogId}:
@@ -202,7 +298,8 @@ const deleteOneBlog = async (req, res) => {
   } catch (error) {
     const err = {}
     if (error.message === 'only admin can delete a blog') {
-      err.details = 'try login agin with admin (emal, password) or your JWT has expired'
+      err.details =
+        'try login agin with admin (emal, password) or your JWT has expired'
       err.message = error.message
       err.statusCode = 401
     }
@@ -210,4 +307,11 @@ const deleteOneBlog = async (req, res) => {
   }
 }
 
-export { deleteOneBlog, createOneBlog, updateOneBlog, getAllBlogs, getOneBlog, getLikes }
+export {
+  deleteOneBlog,
+  createOneBlog,
+  updateOneBlog,
+  getAllBlogs,
+  getOneBlog,
+  getLikes, postComment, likeBlog, likeComment, deleteComment
+}

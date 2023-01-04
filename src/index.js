@@ -5,7 +5,7 @@ import cors from 'cors'
 import { config } from 'dotenv'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
-import cookieParser from 'cookie-parser'
+// import User from './database/userModal.js'
 const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
   config()
@@ -27,6 +27,7 @@ mongoose
     useNewUrlParser: true
   })
   .then(() => console.log('connected to db'))
+// User.deleteMany().then((re) => console.log(re))
 app.get('/', (req, res) => {
   res.cookie('hi', 'thet')
   console.log(res.cookie('hi'))

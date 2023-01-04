@@ -1,7 +1,7 @@
 import User from '../database/userModal.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { validateUser } from '../database/userSchema.js'
+import { validateUser, updateSchema } from '../database/userSchema.js'
 
 const createUserService = async (user) => {
   const { error, value } = validateUser.validate(user)
@@ -33,10 +33,18 @@ const getAllUsersService = async (req) => {
     data: users
   }
 }
+const getSingleUserService = async (req) => {
+  const user = await User.findById(req.params.userId)
+  return {
+    statusCode: 200,
+    message: `user ${req.params.userId} sent  successfully`,
+    data: user
+  }
+}
+
 const loginUserSevice = async (body) => {
   const { email, password } = body
   const user = await User.findOne({ email })
-
   if (user && (await bcrypt.compare(password, user.password))) {
     return {
       statusCode: 200,
@@ -57,4 +65,35 @@ const generateJWT = (id) =>
     expiresIn: '5d'
   })
 
-export { loginUserSevice, createUserService, generateJWT, getAllUsersService }
+const deleteUsersService = async (req) => {
+  if (process.env.ADMIN_EMAIL !== req.user.email) {
+    throw new Error('only admin can delete a user')
+  }
+  const user = await User.deleteOne({ _id: req.params.userId })
+  return user
+}
+const updateUsersService = async (req) => {
+  if (req.params.userId !== req.user.id) {
+    throw new Error('only owner can update his/her profile')
+  }
+  const user = await User.findById(req.params.userId)
+  const { value, error } = updateSchema.validate(req.body)
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  for (const val in value) {
+    user[val] = value[val]
+  }
+  await user.save()
+  return user
+}
+export {
+  updateUsersService,
+  loginUserSevice,
+  createUserService,
+  getSingleUserService,
+  generateJWT,
+  getAllUsersService,
+  deleteUsersService
+}

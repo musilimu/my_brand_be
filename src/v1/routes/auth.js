@@ -3,7 +3,7 @@ import express from 'express'
 import passport from 'passport'
 import FacebookStrategy from 'passport-facebook'
 
-import { createUser, getAllUsers, loginUser } from '../../controllers/authController.js'
+import { createUser, getAllUsers, loginUser, deteUser, updateUser, getSingleUser } from '../../controllers/authController.js'
 import secureRoute from '../../middlewares/authMiddleware.js'
 import { config } from 'dotenv'
 import { createUserService, generateJWT } from '../../services/userService.js'
@@ -78,7 +78,8 @@ let user
 router.route('/signup').post(createUser)
 router.route('/login').post(loginUser)
 router.get('/profile', secureRoute, (req, res) => {
-  res.json(user)
+  res.json({ data: req.user, message: `user ${req.user.id} sent successfully`, statusCode: 200 })
 })
-router.get('/users', secureRoute, getAllUsers)
+router.route('/users').get(secureRoute, getAllUsers)
+router.route('/users/:userId').delete(secureRoute, deteUser).put(secureRoute, updateUser).get(secureRoute, getSingleUser)
 export { router as v1AuthRouter }

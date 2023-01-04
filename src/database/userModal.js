@@ -20,7 +20,9 @@ const UserSchema = new Schema(
       required: [true, 'password is required.'],
       minLength: 6
     },
-    avatar: String
+    avatar: String,
+    phone: String,
+    address: String
   },
   {
     timestamps: true

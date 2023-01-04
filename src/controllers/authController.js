@@ -1,7 +1,7 @@
 import {
   createUserService,
   loginUserSevice,
-  getAllUsersService
+  getAllUsersService, updateUsersService, deleteUsersService, getSingleUserService
 } from '../services/userService.js'
 /**
  * @swagger
@@ -68,15 +68,126 @@ const loginUser = async (req, res) => {
     })
   }
 }
+/**
+ * @swagger
+ * /api/v1/auth/users:
+ *   get:
+ *     summary: get all users
+ *     tags: [auth routes]
+ *     responses:
+ *       '201':
+ *         description: logged in successfully
+ */
 const getAllUsers = async (req, res) => {
   try {
     const users = await getAllUsersService(req)
-    res.status(201).json(users)
+    res.status(200).json(users)
   } catch (error) {
     res.status(401).json({
-      msg: 'users not fund',
+      msg: 'users not found',
       error: error.message
     })
   }
 }
-export { createUser, loginUser, getAllUsers }
+
+/**
+ * @swagger
+ * /api/v1/auth/users/{userId}:
+ *    get:
+ *      tags: [auth routes]
+ *      summary: get one user
+ *      parameters:
+ *        - name: userId
+ *          in: path
+ *          description: provide userId
+ *          required: true
+ *      responses:
+ *        200:
+ *          description: success
+ *        404:
+ *          description: not found
+ */
+const getSingleUser = async (req, res) => {
+  try {
+    const user = await getSingleUserService(req)
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(401).json({
+      msg: 'users not found',
+      error: error.message
+    })
+  }
+}
+
+/**
+ * @swagger
+ * /api/v1/auth/users/{userId}:
+ *    delete:
+ *      tags: [auth routes]
+ *      summary: deleting a one user, should provide userId from our database
+ *      parameters:
+ *        - name: userId
+ *          in: path
+ *          description: provide userId
+ *          required: true
+ *      responses:
+ *        200:
+ *          description: success
+ *        401:
+ *          description: not found
+ */
+
+const deteUser = async (req, res) => {
+  try {
+    const user = await deleteUsersService(req)
+    res.status(200).json({
+      statusCode: 200,
+      message: 'users delete successfully',
+      data: user
+    })
+  } catch (error) {
+    res.status(401).json({
+      message: 'user not found',
+      error: error.message
+    })
+  }
+}
+/**
+ * @swagger
+ * /api/v1/auth/users/{userId}:
+ *   put:
+ *     summary: add user profile and update it
+ *     tags: [auth routes]
+ *     parameters:
+ *      - name: userId
+ *        in: path
+ *        description: provide userId
+ *        required: true
+ *     requestBody:
+ *       description: please fill all required fields
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/profileInput'
+ *     responses:
+ *       '201':
+ *         description: Commented successfuly
+ */
+const updateUser = async (req, res) => {
+  try {
+    const user = await updateUsersService(req)
+    res.status(200).json({
+      statusCode: 200,
+      message: 'user updated successfully',
+      data: user
+    })
+  } catch (error) {
+    res.status(401).json({
+      message: 'user not found, request failed please try read `http://localhost:3000/api/v1/docs for more info`',
+      error: error.message,
+      statusCode: 400
+    })
+  }
+}
+export { createUser, loginUser, getAllUsers, deteUser, updateUser, getSingleUser }

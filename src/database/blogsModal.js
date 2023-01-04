@@ -16,6 +16,7 @@ const BlogSchema = new Schema(
     banner: String,
     likes: Object,
     comments: [CommentSchema]
+
   },
   {
     timestamps: true
