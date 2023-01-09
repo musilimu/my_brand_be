@@ -1,6 +1,11 @@
+import Redis from 'redis'
 import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
+const client = Redis.createClient({
+  host: process.env.REDIS_SERVER,
+  port: 6379
+})
 
 const getAllBlogsService = async (req) => {
   const allBlogs = await fetchByParams(req.query)
@@ -21,39 +26,72 @@ const sortBlogs = (sortStr = 'created_at:asc') => {
 }
 const fetchByParams = async (query) => {
   const { sort, limit, offset, search, fields } = query
+
   let returnFields = {}
   returnFields = fields?.split(',').reduce((fieldSets, field) => {
     fieldSets[field] = 1
     return fieldSets
   }, {})
 
-  const allBlogs = await Blog.find(
-    { $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] },
-    returnFields
-  )
-    .sort({ createdAt: sortBlogs(sort) })
-    .skip(+offset)
-    .limit(+limit)
-  return allBlogs
+  console.log('query', JSON.stringify(query))
+
+  await client.connect()
+
+  const value = await client.get(JSON.stringify(query))
+  if (value) {
+    const allBlogs = JSON.parse(value)
+    return allBlogs
+  } else {
+    const data = await Blog.find(
+      { $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] },
+      returnFields
+    )
+      .sort({ createdAt: sortBlogs(sort) })
+      .skip(+offset)
+      .limit(+limit)
+    await client.set(JSON.stringify(query), JSON.stringify(data))
+    await client.disconnect()
+    return data
+  }
 }
 const getLikesServive = async (req) => {
   const { blogId } = req.params
-  const likes = await LikeModal.find({ blog: blogId })
-  return likes
+  await client.connect()
+  const data = await client.get(blogId)
+  if (data) {
+    return JSON.parse(data)
+  } else {
+    const likes = await LikeModal.find({ blog: blogId })
+    await client.set(blogId, JSON.stringify(likes))
+    return likes
+  }
 }
 const getOneBlogSevice = async (blogId, req) => {
   const { fields } = req.query
-
+  await client.connect()
   let returnFields = {}
   returnFields = fields?.split(',').reduce((fieldSets, field) => {
     fieldSets[field] = 1
     return fieldSets
   }, {})
-  const blog = await Blog.findById(blogId, returnFields)
-  return {
-    statusCode: 200,
-    message: `blog ${blogId} from our database`,
-    data: blog
+  const data = await client.get(`${blogId}--${JSON.stringify(returnFields)}`)
+  if (data) {
+    const blog = JSON.parse(data)
+    await client.disconnect()
+
+    return {
+      statusCode: 200,
+      message: `blog ${blogId} from our database`,
+      data: blog
+    }
+  } else {
+    const blog = await Blog.findById(blogId, returnFields)
+    await client.disconnect()
+    return {
+      statusCode: 200,
+      message: `blog ${blogId} from our database`,
+      data: blog
+    }
   }
 }
 
@@ -142,10 +180,17 @@ const deleteCommentService = async (req) => {
   }
 
   const blog = await Blog.findById(req.params.blogId)
-  const comments = blog.comments.filter(({ _id }) => _id != req.params.commentId)
+  const comments = blog.comments.filter(
+    ({ _id }) => _id != req.params.commentId
+  )
   blog.comments = comments
   await blog.save()
-  return { statusCode: 200, message: '`deleted a comment successfully` => updated a blog by removing a comment', data: blog }
+  return {
+    statusCode: 200,
+    message:
+      '`deleted a comment successfully` => updated a blog by removing a comment',
+    data: blog
+  }
 }
 
 export {

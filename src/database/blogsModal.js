@@ -24,14 +24,17 @@ const BlogSchema = new Schema(
 )
 
 BlogSchema.pre('save', async function (next) {
-  const fileName = `public/${crypto.randomUUID()} ${Date.now()}.txt`
-  fs.writeFile(fileName, this.banner, (err) => {
-    if (err) {
-      console.error(err)
-    }
-  })
-  this.banner = fileName
-  next()
+  if (this.banner) next()
+  else {
+    const fileName = `${crypto.randomUUID()}--${Date.now()}`
+    fs.writeFile(`public/${fileName}`, this.banner, (err) => {
+      if (err) {
+        console.error(err)
+      }
+    })
+    this.banner = fileName
+    next()
+  }
 })
 
 const Blog = mongoose.model('Blogs', BlogSchema)

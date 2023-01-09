@@ -18,7 +18,7 @@ import {
  *             $ref: '#/components/schemas/CreateUserInput'
  *     responses:
  *       '201':
- *         description: logged in successfully
+ *         description: user account created successfully
  */
 
 const createUser = async (req, res) => {
@@ -76,7 +76,9 @@ const loginUser = async (req, res) => {
  *     tags: [auth routes]
  *     responses:
  *       '201':
- *         description: logged in successfully
+ *         description: returns list of all users
+ *       '401':
+ *         description: Error try loggin first
  */
 const getAllUsers = async (req, res) => {
   try {

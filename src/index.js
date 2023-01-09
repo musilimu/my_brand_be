@@ -10,7 +10,14 @@ const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
   config()
 }
-app.use(cors())
+
+const corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
+
 app.use(
   session({
     secret: process.env.MY_SUPER_SECRET,
@@ -27,12 +34,7 @@ mongoose
     useNewUrlParser: true
   })
   .then(() => console.log('connected to db'))
-// User.deleteMany().then((re) => console.log(re))
-app.get('/', (req, res) => {
-  res.cookie('hi', 'thet')
-  console.log(res.cookie('hi'))
-  res.json([1, 2, 3])
-})
+
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)
 

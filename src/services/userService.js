@@ -1,6 +1,6 @@
-import User from '../database/userModal.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import User from '../database/userModal.js'
 import { validateUser, updateSchema } from '../database/userSchema.js'
 
 const createUserService = async (user) => {
@@ -22,11 +22,7 @@ const createUserService = async (user) => {
   }
 }
 const getAllUsersService = async (req) => {
-  if (process.env.ADMIN_EMAIL !== req.user.email) {
-    throw new Error('only admin can update a blog')
-  }
-
-  const users = await User.find()
+  const users = await User.find({}, { password: 0, __v: 0 })
   return {
     statusCode: 200,
     message: 'all users sent  successfully',
@@ -34,7 +30,7 @@ const getAllUsersService = async (req) => {
   }
 }
 const getSingleUserService = async (req) => {
-  const user = await User.findById(req.params.userId)
+  const user = await User.findById(req.params.userId, { password: 0, __v: 0 })
   return {
     statusCode: 200,
     message: `user ${req.params.userId} sent  successfully`,
@@ -44,6 +40,7 @@ const getSingleUserService = async (req) => {
 
 const loginUserSevice = async (body) => {
   const { email, password } = body
+  // console.log(110)
   const user = await User.findOne({ email })
   if (user && (await bcrypt.compare(password, user.password))) {
     return {

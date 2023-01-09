@@ -34,7 +34,10 @@ export default function swagger (app, port) {
   app.use('/api/v1/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerSpec))
   app.use((req, res) => {
     res.status(404).json({
-      error: 'route not found', message: 'route not available', detail: 'check for another route or try again'
+      statusCode: 404,
+      error: 'route not found',
+      message: 'route not available',
+      detail: 'check for another route or try again'
     })
   })
 }

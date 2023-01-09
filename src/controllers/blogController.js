@@ -13,7 +13,7 @@ import {
  * /api/v1/blogs:
  *    get:
  *      tags: [blog routes]
- *      description: returns all blogs from our database
+ *      description: <p>returns all blogs from our database</p> (you can also add query to filter your blogs <strong>/api/v1/blogs?sort=created_at:asc&limit=10&offset=0&search=javascript&fields=title,body,banner</strong>)<h3>sorting </h3><p> ascending <strong>/api/v1/blogs?sort=created_at:asc</strong></p><p>descending <strong>/api/v1/blogs?sort=created_at:desc</strong></p><p> <h3>return fields</h3><p>you may not need all fields filter what you need</p><p><strong>/api/v1/blogs?fields=title,body,banner</strong></p><h3>limit the number of blogs</h3><p>limit the length of the response (number of blogs)</p><p><strong>/api/v1/blogs?limit=10</strong></p>[those queries are optional put them according to your choise, add more as shown above]</p>
  *      responses:
  *        200:
  *          description: blogs get all blogs from our api
@@ -60,7 +60,7 @@ const getLikes = async (req, res) => {
     const Likes = await getLikesServive(req)
     res.json(Likes)
   } catch (error) {
-    res.status(400).json({
+    res.json({
       details: 'try provide id of blog and try again',
       error: error.message,
       statusCode: 400
@@ -81,7 +81,7 @@ const getLikes = async (req, res) => {
  *        required: true
  *     responses:
  *       '201':
- *         description: Commented successfuly
+ *         description: all likes likes for this blog sent successfuly
  */
 
 const getOneBlog = async (req, res) => {
@@ -89,7 +89,7 @@ const getOneBlog = async (req, res) => {
     const blog = await getOneBlogSevice(req.params.blogId, req)
     res.status(200).json(blog)
   } catch (error) {
-    res.status(400).json({
+    res.json({
       details: 'try provide id of blog and try again',
       error: error.message,
       statusCode: 400
@@ -117,11 +117,13 @@ const getOneBlog = async (req, res) => {
 const createOneBlog = async (req, res) => {
   try {
     const createdBlog = await postOneBlogSevice(req.body, req)
-    res.json(createdBlog)
+    res.status(201).json(createdBlog)
   } catch (error) {
-    res.status(400).json({
+    let statusCode = 400
+    if (error.message === 'only admin can create a blog') statusCode = 401
+    res.status(statusCode).json({
       error: error.message,
-      statusCode: 400,
+      statusCode,
       datails:
         'please try fill all required fields read `http://localhost:3000/api/v1/docs`'
     })
@@ -186,14 +188,14 @@ const createOneBlog = async (req, res) => {
  *        required: true
  *     responses:
  *       '201':
- *         description: Commented successfuly
+ *         description: liked successfuly
  */
 const postComment = async (req, res) => {
   try {
     const updatedBlog = await postCommentSevice(req)
     res.send(updatedBlog)
   } catch (error) {
-    res.status(401).json({ error: error.message })
+    res.json({ error: error.message })
   }
 }
 
@@ -202,7 +204,7 @@ const likeBlog = async (req, res) => {
     const updatedBlog = await likeBlogSevice(req)
     res.send(updatedBlog)
   } catch (error) {
-    res.status(401).json({ error: error.message })
+    res.json({ error: error.message })
   }
 }
 
@@ -230,7 +232,7 @@ const likeComment = async (req, res) => {
     const updatedBlog = await likeCommentService(req)
     res.send(updatedBlog)
   } catch (error) {
-    res.status(401).json({ error: error.message })
+    res.json({ error: error.message })
   }
 }
 
@@ -239,7 +241,9 @@ const updateOneBlog = async (req, res) => {
     const updatedBlog = await updateOneBlogSevice(req.params.blogId, req)
     res.send(updatedBlog)
   } catch (error) {
-    res.status(401).json({ error: error.message })
+    let statusCode = 400
+    if (error.message === 'only admin can update a blog') statusCode = 401
+    res.status(statusCode).json({ error: error.message, statusCode })
   }
 }
 /**
@@ -266,7 +270,7 @@ const deleteComment = async (req, res) => {
     const updatedBlog = await deleteCommentService(req)
     res.status(200).send(updatedBlog)
   } catch (error) {
-    res.status(401).json({ error: error.message })
+    res.json({ error: error.message })
   }
 }
 /**
@@ -287,7 +291,7 @@ const deleteComment = async (req, res) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/blog'
- *        401:
+ *        404:
  *          description: not found
  */
 
@@ -303,7 +307,7 @@ const deleteOneBlog = async (req, res) => {
       err.message = error.message
       err.statusCode = 401
     }
-    res.status(401).json(err)
+    res.json(err)
   }
 }
 

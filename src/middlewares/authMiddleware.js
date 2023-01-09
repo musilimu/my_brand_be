@@ -3,7 +3,12 @@ import User from '../database/userModal.js'
 
 const secureRoute = async (req, res, next) => {
   let JWTtoken
-
+  const errorRes = {
+    error: 'not authorized',
+    JWTtoken: req.headers.authorization,
+    details: 'JWT is expired  and not acceptable',
+    statusCode: 403
+  }
   if (req.headers.authorization?.startsWith('Bearer')) {
     try {
       JWTtoken = req.headers.authorization.split(' ')[1]
@@ -12,12 +17,7 @@ const secureRoute = async (req, res, next) => {
       next()
       return
     } catch (err) {
-      res.status(403).json({
-        error: 'not authorized',
-        JWTtoken: req.headers.authorization,
-        details: 'JWT is expired  and not acceptable',
-        statusCode: 403
-      })
+      res.status(403).json(errorRes)
       return
     }
   }
