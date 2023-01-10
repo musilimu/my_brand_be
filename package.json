@@ -2,7 +2,8 @@
   "name": "my-brand-be",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/out.js",
+  "main": "main.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon main",
     "build": "esbuild main.js --bundle --platform=node --packages=external --outfile=out.js && babel out.js -d dist",
