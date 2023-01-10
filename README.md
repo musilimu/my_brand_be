@@ -1,15 +1,8 @@
-# 🚀 Welcome to your new awesome project!
+# Blogs API
 
-This project has been created using **webpack-cli**, you can now run
-
-```
-npm run build
-```
-
-or
+To start you can now run
 
 ```
-yarn build
+npm i
+npm run dev
 ```
-
-to bundle your application
