@@ -9,7 +9,10 @@ const client = Redis.createClient({
 client.on('connect', () => {
   console.log('Connected to redis server!')
 })
-await client.connect()
+const connect = async () => {
+  await client.connect()
+}
+connect()
 const getAllBlogsService = async (req) => {
   const allBlogs = await fetchByParams(req.query)
   return {

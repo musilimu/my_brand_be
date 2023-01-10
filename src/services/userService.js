@@ -11,8 +11,10 @@ const client = Redis.createClient({
 client.on('connect', () => {
   console.log('Connected to redis server!')
 })
-
-await client.connect()
+const connect = async () => {
+  await client.connect()
+}
+connect()
 const createUserService = async (user) => {
   const { error, value } = validateUser.validate(user)
   if (error) return error.details[0]
