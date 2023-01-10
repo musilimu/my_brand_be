@@ -25,18 +25,18 @@ app.use(
     store: new RedisStore({ client: redisClient }),
     saveUninitialized: false,
     secret: process.env.MY_SUPER_SECRET,
+    cookie: { secure: true },
     resave: false
   })
 )
 
-app.use(
-  session({
-    secret: process.env.MY_SUPER_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  })
-)
+// app.use(
+//   session({
+//     secret: process.env.MY_SUPER_SECRET,
+//     resave: false,
+//     saveUninitialized: true
+//   })
+// )
 app.use(express.json())
 app.use(express.static('public'))
 mongoose.set('strictQuery', true)
