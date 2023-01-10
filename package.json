@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon main",
-    "build": "esbuild main.js --bundle --platform=node --packages=external --outfile=out.js && babel out.js -d dist",
+    "build": "esbuild main.js --bundle --platform=node --packages=external --outfile=out.cjs && babel out.cjs --out-file dist/index.cjs",
     "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit",
-    "start": "node ./dist/out.js"
+    "start": "node ./dist/out.cjs"
   },
   "keywords": [],
   "author": "",
