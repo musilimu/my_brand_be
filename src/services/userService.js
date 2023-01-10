@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import Redis from 'redis'
+// import Redis from 'redis'
+import * as Redis from 'redis'
 import User from '../database/userModal.js'
 import { validateUser, updateSchema } from '../database/userSchema.js'
 const client = Redis.createClient({
