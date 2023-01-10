@@ -1,11 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import session from 'express-session'
+import * as Redis from 'redis'
+import connectRedis from 'connect-redis'
 import cors from 'cors'
 import { config } from 'dotenv'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
-// import User from './database/userModal.js'
+const RedisStore = connectRedis(session)
 const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
   config()
@@ -17,6 +19,15 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+const redisClient = Redis.createClient({ legacyMode: true })
+app.use(
+  session({
+    store: new RedisStore({ client: redisClient }),
+    saveUninitialized: false,
+    secret: process.env.MY_SUPER_SECRET,
+    resave: false
+  })
+)
 
 app.use(
   session({
