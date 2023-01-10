@@ -3,8 +3,9 @@ import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
 const client = Redis.createClient({
-  host: process.env.REDIS_SERVER,
-  port: 6379
+  host: process.env.REDIS_HOSTNAME,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD
 })
 
 const getAllBlogsService = async (req) => {
@@ -40,6 +41,7 @@ const fetchByParams = async (query) => {
   const value = await client.get(JSON.stringify(query))
   if (value) {
     const allBlogs = JSON.parse(value)
+    await client.disconnect()
     return allBlogs
   } else {
     const data = await Blog.find(

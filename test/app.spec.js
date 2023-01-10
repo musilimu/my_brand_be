@@ -1,11 +1,8 @@
 import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
-// import mongoose from 'mongoose'
 import server from '../main.js'
-import Blog from '../src/database/blogsModal.js'
-import User from '../src/database/userModal.js'
 import { readFile } from 'fs'
-import { afterEach, describe, it } from 'mocha'
+import { describe, it } from 'mocha'
 
 const should = chai.should()
 let token, user, blog, comments, userId
@@ -13,17 +10,9 @@ const profile = {
   phone: '0791160178',
   address: 'Ngoma - Remera'
 }
-User.find().then(re => {
-  console.log(re.length)
-})
+
 chai.use(chaiHttp)
 describe('@# Testing /api/v1/auth/', () => {
-  // afterEach((done) => {
-  //   User.deleteMany({}, (err) => {
-  //     if (err) console.err(err)
-  //     done()
-  //   })
-  // })
   it('signup the user', (done) => {
     user = {
       email: `johnd${Math.floor(Math.random() * 1000)}@gmail.com`,
@@ -52,7 +41,6 @@ describe('@# Testing /api/v1/auth/', () => {
       })
       .end((err, res) => {
         if (err) console.err(err)
-
         res.should.have.status(200)
         res.body.should.be.a('object')
         expect(res.body).to.have.property('data')
@@ -170,7 +158,6 @@ describe('@# test server', () => {
         .get('/api/v1/blogs/63a154066e166cf15da42031/likes')
         .end((err, res) => {
           if (err) console.err(err)
-
           res.should.have.status(200)
           res.body.should.be.a('array')
           done()
