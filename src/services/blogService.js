@@ -4,7 +4,11 @@ import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
 const client = Redis.createClient({
   legacyMode: true,
-  url: process.env.REDIS_URL
+  socket: {
+    host: process.env.REDIS_HOSTNAME,
+    port: process.env.REDIS_PORT
+  },
+  password: process.env.REDIS_PASSWORD
 })
 client.on('connect', () => {
   console.log('Connected to redis server!')

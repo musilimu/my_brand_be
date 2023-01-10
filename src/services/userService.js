@@ -6,7 +6,11 @@ import User from '../database/userModal.js'
 import { validateUser, updateSchema } from '../database/userSchema.js'
 const client = Redis.createClient({
   legacyMode: true,
-  url: process.env.REDIS_URL
+  socket: {
+    host: process.env.REDIS_HOSTNAME,
+    port: process.env.REDIS_PORT
+  },
+  password: process.env.REDIS_PASSWORD
 })
 client.on('connect', () => {
   console.log('Connected to redis server!')
