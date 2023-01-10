@@ -3,11 +3,13 @@ import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
 const client = Redis.createClient({
-  host: process.env.REDIS_HOSTNAME,
-  port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD
+  legacyMode: true,
+  url: process.env.REDIS_URL
 })
-
+client.on('connect', () => {
+  console.log('Connected to redis server!')
+})
+await client.connect()
 const getAllBlogsService = async (req) => {
   const allBlogs = await fetchByParams(req.query)
   return {
@@ -36,12 +38,10 @@ const fetchByParams = async (query) => {
 
   console.log('query', JSON.stringify(query))
 
-  await client.connect()
-
   const value = await client.get(JSON.stringify(query))
   if (value) {
     const allBlogs = JSON.parse(value)
-    await client.disconnect()
+
     return allBlogs
   } else {
     const data = await Blog.find(
@@ -52,13 +52,13 @@ const fetchByParams = async (query) => {
       .skip(+offset)
       .limit(+limit)
     await client.set(JSON.stringify(query), JSON.stringify(data))
-    await client.disconnect()
+
     return data
   }
 }
 const getLikesServive = async (req) => {
   const { blogId } = req.params
-  await client.connect()
+
   const data = await client.get(blogId)
   if (data) {
     return JSON.parse(data)
@@ -70,7 +70,7 @@ const getLikesServive = async (req) => {
 }
 const getOneBlogSevice = async (blogId, req) => {
   const { fields } = req.query
-  await client.connect()
+
   let returnFields = {}
   returnFields = fields?.split(',').reduce((fieldSets, field) => {
     fieldSets[field] = 1
@@ -79,7 +79,6 @@ const getOneBlogSevice = async (blogId, req) => {
   const data = await client.get(`${blogId}--${JSON.stringify(returnFields)}`)
   if (data) {
     const blog = JSON.parse(data)
-    await client.disconnect()
 
     return {
       statusCode: 200,
@@ -88,7 +87,7 @@ const getOneBlogSevice = async (blogId, req) => {
     }
   } else {
     const blog = await Blog.findById(blogId, returnFields)
-    await client.disconnect()
+
     return {
       statusCode: 200,
       message: `blog ${blogId} from our database`,

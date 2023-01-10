@@ -5,13 +5,14 @@ import * as Redis from 'redis'
 import User from '../database/userModal.js'
 import { validateUser, updateSchema } from '../database/userSchema.js'
 const client = Redis.createClient({
-  host: process.env.REDIS_HOSTNAME,
-  port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD
+  legacyMode: true,
+  url: process.env.REDIS_URL
 })
 client.on('connect', () => {
   console.log('Connected to redis server!')
 })
+
+await client.connect()
 const createUserService = async (user) => {
   const { error, value } = validateUser.validate(user)
   if (error) return error.details[0]
@@ -31,11 +32,8 @@ const createUserService = async (user) => {
   }
 }
 const getAllUsersService = async (req) => {
-  await client.connect()
   const data = await client.get('users')
   if (data) {
-    await client.disconnect()
-
     return {
       statusCode: 200,
       message: 'all users sent  successfully',
@@ -44,7 +42,6 @@ const getAllUsersService = async (req) => {
   } else {
     const users = await User.find({}, { password: 0, __v: 0 })
     await client.set('users', JSON.stringify(users))
-    await client.disconnect()
 
     return {
       statusCode: 200,
@@ -55,12 +52,9 @@ const getAllUsersService = async (req) => {
 }
 const getSingleUserService = async (req) => {
   try {
-    await client.connect()
     const data = await client.get(req.params.userId)
     console.log('test', data)
     if (data) {
-      await client.disconnect()
-
       return {
         statusCode: 200,
         message: `user ${req.params.userId} sent  successfully`,
@@ -72,7 +66,6 @@ const getSingleUserService = async (req) => {
         __v: 0
       })
       await client.set(req.params.userId, JSON.stringify(user))
-      await client.disconnect()
 
       return {
         statusCode: 200,
@@ -104,17 +97,14 @@ const loginUserSevice = async (body) => {
 }
 
 const generateJWT = async (id) => {
-  await client.connect()
   const data = await client.get(`token ${id}`)
   if (data) {
-    await client.disconnect()
     return data
   } else {
     const token = jwt.sign({ id }, process.env.MY_SUPER_SECRET, {
       expiresIn: '5d'
     })
     await client.setEx(`token ${id}`, 5 * 24 * 60 * 60, token)
-    await client.disconnect()
 
     return token
   }
