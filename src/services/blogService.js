@@ -113,6 +113,7 @@ const postOneBlogSevice = async (blog, req) => {
   }
 
   const createdBlog = new Blog({ ...value, author: req.user.id })
+  // client.flushAll()
   await createdBlog.save()
   return {
     statusCode: 201,

@@ -186,7 +186,7 @@ const updateUser = async (req, res) => {
     })
   } catch (error) {
     res.status(401).json({
-      message: 'user not found, request failed please try read `http://localhost:3000/api/v1/docs for more info`',
+      message: 'user not found, request failed',
       error: error.message,
       statusCode: 400
     })

@@ -54,10 +54,7 @@ describe('@# Testing /api/v1/auth/', () => {
     chai
       .request(server)
       .get('/api/v1/auth/users')
-      .set(
-        'Authorization',
-        `Bearer ${token}`
-      )
+      .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         if (err) console.err(err)
 
@@ -72,10 +69,7 @@ describe('@# Testing /api/v1/auth/', () => {
     chai
       .request(server)
       .get(`/api/v1/auth/users/${userId}`)
-      .set(
-        'Authorization',
-        `Bearer ${token}`
-      )
+      .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         if (err) console.err(err)
 
@@ -90,10 +84,8 @@ describe('@# Testing /api/v1/auth/', () => {
     chai
       .request(server)
       .put(`/api/v1/auth/users/${userId}`)
-      .set(
-        'Authorization',
-        `Bearer ${token}`
-      ).send(profile)
+      .set('Authorization', `Bearer ${token}`)
+      .send(profile)
       .end((err, res) => {
         if (err) console.err(err)
 
@@ -108,10 +100,7 @@ describe('@# Testing /api/v1/auth/', () => {
     chai
       .request(server)
       .delete(`/api/v1/auth/users/${userId}`)
-      .set(
-        'Authorization',
-        `Bearer ${token}`
-      )
+      .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         if (err) console.err(err)
 
@@ -136,6 +125,7 @@ describe('@# test server', () => {
           res.body.should.be.a('object')
           res.body.should.have.property('data')
           blog = res.body.data[0]
+
           res.body.should.be.a('object')
           done()
         })
@@ -167,13 +157,9 @@ describe('@# test server', () => {
       chai
         .request(server)
         .post(`/api/v1/blogs/${blog._id}/likes`)
-        .set(
-          'Authorization',
-          `Bearer ${token}`
-        )
+        .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) console.err(err)
-
           res.should.have.status(200)
           res.body.should.be.a('object')
           done()
@@ -183,10 +169,7 @@ describe('@# test server', () => {
       chai
         .request(server)
         .post(`/api/v1/blogs/${blog._id}/comments`)
-        .set(
-          'Authorization',
-          `Bearer ${token}`
-        )
+        .set('Authorization', `Bearer ${token}`)
         .send({ text: 'testing comment' })
         .end((err, res) => {
           if (err) console.err(err)
@@ -200,10 +183,7 @@ describe('@# test server', () => {
       chai
         .request(server)
         .post(`/api/v1/blogs/${blog._id}/comments/${comments._id}/likes`)
-        .set(
-          'Authorization',
-          `Bearer ${token}`
-        )
+        .set('Authorization', `Bearer ${token}`)
         .send({ text: 'testing comment' })
         .end((err, res) => {
           if (err) console.err(err)
@@ -217,10 +197,7 @@ describe('@# test server', () => {
       chai
         .request(server)
         .delete(`/api/v1/blogs/${blog._id}/comments/${comments._id}`)
-        .set(
-          'Authorization',
-          `Bearer ${token}`
-        )
+        .set('Authorization', `Bearer ${token}`)
         .send({ text: 'testing comment' })
         .end((err, res) => {
           if (err) console.err(err)
@@ -235,10 +212,7 @@ describe('@# test server', () => {
         chai
           .request(server)
           .post('/api/v1/blogs')
-          .set(
-            'Authorization',
-            `Bearer ${token}`
-          )
+          .set('Authorization', `Bearer ${token}`)
           .send(JSON.parse(data))
           .end((err, res) => {
             if (err) console.err(err)
@@ -256,10 +230,7 @@ describe('@# test server', () => {
         chai
           .request(server)
           .put('/api/v1/blogs/63a154066e166cf15da42031')
-          .set(
-            'Authorization',
-            `Bearer ${token}`
-          )
+          .set('Authorization', `Bearer ${token}`)
           .send(JSON.parse(data))
           .end((err, res) => {
             if (err) console.err(err)
@@ -277,10 +248,7 @@ describe('@# test server', () => {
       chai
         .request(server)
         .delete('/api/v1/blogs/63a154066e166cf15da42031')
-        .set(
-          'Authorization',
-          `Bearer ${token}`
-        )
+        .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           if (err) console.err(err)
 
