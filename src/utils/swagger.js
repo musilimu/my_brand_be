@@ -29,15 +29,15 @@ const options = {
 }
 
 const swaggerSpec = swaggerJSDoc(options)
-
+const responseJSON = {
+  statusCode: 404,
+  error: 'route not found',
+  message: 'route not available',
+  detail: 'check for another route or try again'
+}
 export default function swagger (app, port) {
   app.use('/api/v1/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerSpec))
   app.use((req, res) => {
-    res.status(404).json({
-      statusCode: 404,
-      error: 'route not found',
-      message: 'route not available',
-      detail: 'check for another route or try again'
-    })
+    res.status(404).json(responseJSON)
   })
 }

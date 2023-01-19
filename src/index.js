@@ -7,6 +7,7 @@ import cors from 'cors'
 import { config } from 'dotenv'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
+import { v1MessageRouter } from './v1/routes/messages.js'
 const RedisStore = connectRedis(session)
 const app = express.Router()
 if (process.env.NODE_ENV !== 'production') {
@@ -48,5 +49,6 @@ mongoose
 
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)
+app.use('/api/v1/messages', v1MessageRouter)
 
 export default app

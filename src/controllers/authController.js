@@ -27,9 +27,8 @@ const createUser = async (req, res) => {
     res.status(201).json(createdUser)
   } catch (error) {
     let status = 401
-    if (error.message.includes('duplicate key error collection')) {
-      status = 406
-    }
+    if (error.message.includes('duplicate key error collection')) { status = 406 }
+
     const err = {
       msg: 'Email or Username are being used by another account',
       details: error.message,
