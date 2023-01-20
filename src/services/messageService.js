@@ -1,5 +1,5 @@
 import Redis from 'redis'
-import nodemailer from 'nodemailer'
+// import nodemailer from 'nodemailer'
 import Message from '../database/messageModal.js'
 import { validateMessage } from '../database/messageSchema.js'
 const client = Redis.createClient({
@@ -83,7 +83,6 @@ const getOneMessageSevice = async (messageId, req) => {
     }
   } else {
     const message = await Message.findById(messageId, returnFields)
-    console.log(req.user, message)
     return {
       statusCode: 200,
       message: `Message ${messageId} from our database`,
@@ -92,37 +91,13 @@ const getOneMessageSevice = async (messageId, req) => {
   }
 }
 
-const postOneMessageSevice = async (message, req) => {
+const postOneMessageSevice = async (message) => {
   const { error, value } = await validateMessage.validate(message)
   if (error) {
     throw new Error(error.details[0].message)
   }
 
   const createdMessage = new Message({ ...value })
-  // client.flushAll()
-
-  //   const testAccount = await nodemailer.createTestAccount()
-  //   console.log(testAccount)
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: 'jarrett.oconner@ethereal.email',
-      pass: 'AREQabsnFFV7ZckKXR'
-    }
-  })
-
-  const info = await transporter.sendMail({
-    from: `"${message.name} 👻" <${req.user.email}>`,
-    to: 'muslimuwitondanishema@gmail.com',
-    subject: message.subject,
-    text: message.subject,
-    html: message.message
-  })
-
-  console.log('Message sent: %s', info.messageId)
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
 
   await createdMessage.save()
   return {

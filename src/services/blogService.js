@@ -43,8 +43,6 @@ const fetchByParams = async (query) => {
     return fieldSets
   }, {})
 
-  console.log('query', JSON.stringify(query))
-
   const value = await client.get(JSON.stringify(query))
   if (value) {
     const allBlogs = JSON.parse(value)
@@ -127,8 +125,8 @@ const updateOneBlogSevice = async (blogId, req) => {
     throw new Error('only admin can update a blog')
   }
 
-  const { title, body } = req.body
-  const { error, value } = updatingSchema.validate({ title, body })
+  const { title, body, banner } = req.body
+  const { error, value } = updatingSchema.validate({ title, body, banner })
   if (error) throw new Error(error.details[0].message)
 
   const updatedBlog = await Blog.updateOne({ _id: blogId }, value)

@@ -5,7 +5,7 @@ import { readFile } from 'fs'
 import { describe, it } from 'mocha'
 
 const should = chai.should()
-let token, user, blog, comments, userId
+let token, user, blog, comments, userId, message
 const profile = {
   phone: '0791160178',
   address: 'Ngoma - Remera'
@@ -112,7 +112,66 @@ describe('@# Testing /api/v1/auth/', () => {
       })
   })
 })
+describe('@# Testing /api/v1/auth/', () => {
+  it('posting message', (done) => {
+    chai
+      .request(server)
+      .post('/api/v1/messages')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'muslim',
+        email: 'uwimuslim@gmail.dev',
+        subject: 'lorem test',
+        message: 'reply quickly no dalay man'
+      })
+      .end((err, res) => {
+        if (err) console.err(err)
+        message = res.body.data
+        res.should.have.status(201)
+        res.body.should.be.a('object')
+        expect(res.body).to.have.property('data')
+        expect(res.body.data).to.be.a('object')
+        done()
+      })
+  })
 
+  it('getting messages', (done) => {
+    chai
+      .request(server)
+      .get('/api/v1/messages')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.err(err)
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        expect(res.body).to.have.property('data')
+        done()
+      })
+  })
+  it('getting single message', (done) => {
+    chai
+      .request(server)
+      .get(`/api/v1/messages/${message._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.err(err)
+        res.body.should.be.a('object')
+        expect(res.body).to.have.property('data')
+        done()
+      })
+  })
+  it('deleting single message', (done) => {
+    chai
+      .request(server)
+      .delete(`/api/v1/messages/${message._id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.err(err)
+        res.body.should.be.a('object')
+        done()
+      })
+  })
+})
 describe('@# test server', () => {
   describe('# Testing GET /api/v1/blogs/ ', () => {
     it('get all blogs', (done) => {
@@ -208,7 +267,7 @@ describe('@# test server', () => {
     })
     it('# Testing POST /api/v1/blogs/', (done) => {
       readFile('./test/blog.json', 'utf8', (err, data) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         chai
           .request(server)
           .post('/api/v1/blogs')
@@ -226,7 +285,7 @@ describe('@# test server', () => {
     })
     it('# Testing PUT /api/v1/blogs:blogid', (done) => {
       readFile('./test/update_blog_title.json', 'utf8', (err, data) => {
-        if (err) console.log(err)
+        if (err) console.error(err)
         chai
           .request(server)
           .put('/api/v1/blogs/63a154066e166cf15da42031')

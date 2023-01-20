@@ -84,7 +84,8 @@ const schema = Joi.object({
 
 const updatingSchema = Joi.object({
   title: Joi.string().min(100).max(500),
-  body: Joi.string().min(1500)
+  body: Joi.string().min(1500),
+  banner: Joi.string().dataUri().min(200)
 })
 
 export { schema as validateBlog, updatingSchema }

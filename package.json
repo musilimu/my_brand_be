@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon main",
+    "start": "node main",
     "build": "esbuild main.js --bundle --platform=node --packages=external --outfile=out.cjs && babel out.cjs --out-file dist/index.cjs",
     "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
   },

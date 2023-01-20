@@ -85,7 +85,7 @@ const getOneMessage = async (req, res) => {
 
 const createOneMessage = async (req, res) => {
   try {
-    const createdMessage = await postOneMessageSevice(req.body, req)
+    const createdMessage = await postOneMessageSevice(req.body)
     res.status(201).json(createdMessage)
   } catch (error) {
     let statusCode = 400
