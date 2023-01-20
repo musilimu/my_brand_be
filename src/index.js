@@ -4,15 +4,11 @@ import session from 'express-session'
 import * as Redis from 'redis'
 import connectRedis from 'connect-redis'
 import cors from 'cors'
-import { config } from 'dotenv'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
 import { v1MessageRouter } from './v1/routes/messages.js'
 const RedisStore = connectRedis(session)
 const app = express.Router()
-if (process.env.NODE_ENV !== 'production') {
-  config()
-}
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
