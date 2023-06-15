@@ -5,51 +5,23 @@ import { readFile } from 'fs'
 import { describe, it } from 'mocha'
 
 const should = chai.should()
-let token, user, blog, comments, userId, message
-const profile = {
-  phone: '0791160178',
-  address: 'Ngoma - Remera'
-}
+let token, blog, comments, userId, message
+const profile = { phone: '0791160178', address: 'Ngoma - Remera' }
 
 chai.use(chaiHttp)
 describe('@# Testing /api/v1/auth/', () => {
-  it('signup the user', (done) => {
-    user = {
-      email: `johnd${Math.floor(Math.random() * 1000)}@gmail.com`,
-      password: 'lorem12345',
-      userName: `doed${Math.floor(Math.random() * 1000)}`
-    }
-    chai
-      .request(server)
-      .post('/api/v1/auth/signup')
-      .send(user)
-      .end((err, res) => {
-        if (err) console.err(err)
-
-        res.should.have.status(201)
-        res.body.should.be.a('object')
-        done()
-      })
-  })
-  it('login the user', (done) => {
+  beforeEach(() => {
     chai
       .request(server)
       .post('/api/v1/auth/login')
-      .send({
-        email: user.email,
-        password: user.password
-      })
+      .send(process.env.USER_SEED)
       .end((err, res) => {
-        if (err) console.err(err)
-        res.should.have.status(200)
-        res.body.should.be.a('object')
-        expect(res.body).to.have.property('data')
-        expect(res.body.data).to.be.a('object')
         token = res.body.data.token
         userId = res.body.data._id
         done()
       })
   })
+
   it('get all users', (done) => {
     chai
       .request(server)
