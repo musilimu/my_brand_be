@@ -1,20 +1,24 @@
-import server from '../main'
+import server from '../main.js'
 import chai, { expect } from 'chai'
 import { describe, it } from 'mocha'
+import crypto from 'crypto'
+import chaiHttp from 'chai-http'
 
-describe('@# Testing /api/v1/auth/', () => {
+chai.use(chaiHttp)
+
+describe('# Testing authentication routes', () => {
   let user
-  it('signup the user', (done) => {
-    user = { email: 'john@gmail.com', password: 'lorem12345', userName: 'doe' }
+  it('should signup the user successfully', (done) => {
+    user = { email: crypto.randomUUID() + 'john@gmail.com', password: 'lorem12345', userName: 'doe' }
     chai
       .request(server)
       .post('/api/v1/auth/signup')
       .send(user)
       .end((err, res) => {
         if (err) console.err(err)
-
-        res.should.have.status(201)
-        res.body.should.be.a('object')
+        expect(res.body).to.be.an('object')
+        expect(res.body.statusCode).to.equal(201)
+        expect(res.body).to.have.property('message').to.equal('user account created successfully')
         done()
       })
   })
@@ -22,19 +26,12 @@ describe('@# Testing /api/v1/auth/', () => {
     chai
       .request(server)
       .post('/api/v1/auth/login')
-      .send({
-        email: user.email,
-        password: user.password
-      })
+      .send(user)
       .end((err, res) => {
         if (err) console.err(err)
-
-        res.should.have.status(200)
-        res.body.should.be.a('object')
-        expect(res.body).to.have.property('data')
-        expect(res.body.data).to.be.a('object')
-        // token = res.body.data.token
-        // userId = res.body.data._id
+        expect(res.body).to.be.an('object')
+        expect(res.body.statusCode).to.equal(200)
+        expect(res.body.data).to.have.property('token')
         done()
       })
   })
