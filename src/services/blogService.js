@@ -171,7 +171,7 @@ const deleteOneBlogSevice = async (blogId, req) => {
 }
 const likeCommentService = async (req) => {
   const blog = await Blog.findById(req.params.blogId)
-  const comment = blog.comments.find(({ _id }) => _id == req.params.commentId)
+  const comment = blog.comments.find(({ _id }) => _id === req.params.commentId)
   if (comment.likes.includes(req.user.id)) {
     comment.likes.splice(comment.likes.indexOf(comment.likes), 1)
   } else {
@@ -188,7 +188,7 @@ const deleteCommentService = async (req) => {
 
   const blog = await Blog.findById(req.params.blogId)
   const comments = blog.comments.filter(
-    ({ _id }) => _id != req.params.commentId
+    ({ _id }) => _id !== req.params.commentId
   )
   blog.comments = comments
   await blog.save()

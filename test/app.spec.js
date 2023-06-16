@@ -2,20 +2,21 @@ import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
 import server from '../main.js'
 import { readFile } from 'fs'
-import { describe, it } from 'mocha'
+import { beforeEach, describe, it } from 'mocha'
 
-const should = chai.should()
+// const should = chai.should()
 let token, blog, comments, userId, message
 const profile = { phone: '0791160178', address: 'Ngoma - Remera' }
 
 chai.use(chaiHttp)
 describe('@# Testing /api/v1/auth/', () => {
-  beforeEach(() => {
+  beforeEach((done) => {
     chai
       .request(server)
       .post('/api/v1/auth/login')
       .send(process.env.USER_SEED)
       .end((err, res) => {
+        if (err) console.err(err)
         token = res.body.data.token
         userId = res.body.data._id
         done()
