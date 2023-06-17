@@ -1,23 +1,9 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import * as Redis from 'redis'
 import User from '../database/userModal.js'
 import { validateUser, updateSchema } from '../database/userSchema.js'
-const client = Redis.createClient({
-  legacyMode: true,
-  socket: {
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT
-  },
-  password: process.env.REDIS_PASSWORD
-})
-client.on('connect', () => {
-  console.log('Connected to redis server!')
-})
-const connect = async () => {
-  await client.connect()
-}
-connect()
+import { client } from '../database/redisClient.js'
+
 const createUserService = async (user) => {
   const { error } = validateUser.validate(user)
   if (error) return error.details[0]
@@ -58,7 +44,7 @@ const getAllUsersService = async (req) => {
 const getSingleUserService = async (req) => {
   // try {
   const data = await client.get(req.params.userId)
-  console.log('test', data)
+
   if (data) {
     return {
       statusCode: 200,
@@ -85,6 +71,7 @@ const getSingleUserService = async (req) => {
 const loginUserSevice = async (body) => {
   const { email, password } = body
   const user = await User.findOne({ email })
+
   if (user && (await bcrypt.compare(password, user.password))) {
     return {
       statusCode: 200,

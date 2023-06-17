@@ -1,22 +1,8 @@
-import Redis from 'redis'
 // import nodemailer from 'nodemailer'
 import Message from '../database/messageModal.js'
 import { validateMessage } from '../database/messageSchema.js'
-const client = Redis.createClient({
-  legacyMode: true,
-  socket: {
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT
-  },
-  password: process.env.REDIS_PASSWORD
-})
-client.on('connect', () => {
-  console.log('Connected to redis server!')
-})
-const connect = async () => {
-  await client.connect()
-}
-connect()
+import { client } from '../database/redisClient.js'
+
 const getAllMessagesService = async (req) => {
   const allMessages = await fetchByParams(req.query)
   return {
@@ -125,10 +111,33 @@ const deleteOneMessageSevice = async (messageId, req) => {
     console.log(error.message)
   }
 }
+const updateOneMessageService = async (messageId, req) => {
+  try {
+    const updateMessage = await Message.findById(messageId)
+
+    if (req.user.email !== updateMessage.email && req.user.email !== process.env.ADMIN_EMAIL) {
+      return { error: 'updated a message not allowed', statusCode: 400, details: 'you must be the owner to update the message ' }
+    }
+
+    if (req.user.email !== process.env.ADMIN_EMAIL) {
+      return { error: 'updated a message not allowed', statusCode: 400, details: 'you must be the owner to update the message or admin' }
+    }
+    const { error, value } = await validateMessage.validate(req.body)
+
+    if (error) {
+      throw new Error(error.details[0].message)
+    }
+    const data = await Message.findByIdAndUpdate(messageId, value)
+    return { message: 'updated a message successfully', statusCode: 200, data }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 export {
   getAllMessagesService,
   getOneMessageSevice,
   deleteOneMessageSevice,
-  postOneMessageSevice
+  postOneMessageSevice,
+  updateOneMessageService
 }

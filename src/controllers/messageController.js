@@ -2,8 +2,8 @@ import {
   getAllMessagesService,
   getOneMessageSevice,
   deleteOneMessageSevice,
-  postOneMessageSevice
-
+  postOneMessageSevice,
+  updateOneMessageService
 } from '../services/messageService.js'
 
 /**
@@ -137,10 +137,25 @@ const deleteOneMessage = async (req, res) => {
   }
 }
 
+const updateOneMessage = async (req, res) => {
+  try {
+    const deletedMessage = await updateOneMessageService(req.params.messageId, req)
+    res.status(200).json(deletedMessage)
+  } catch (error) {
+    const err = {}
+    if (error.message === 'only owner can delete a message') {
+      err.details =
+          'try login again  (emal, password) or your JWT has expired'
+      err.message = error.message
+      err.statusCode = 401
+    }
+    res.status(err.statusCode).json(err)
+  }
+}
 export {
   deleteOneMessage,
   createOneMessage,
   getAllMessages,
-  getOneMessage
-
+  getOneMessage,
+  updateOneMessage
 }

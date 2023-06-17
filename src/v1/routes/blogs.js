@@ -11,7 +11,8 @@ import {
 import secureRoute from '../../middlewares/authMiddleware.js'
 const router = express.Router()
 
-router.route('/').get(getAllBlogs).post(secureRoute, createOneBlog)
+router.get('/', getAllBlogs)
+router.post('/', secureRoute, createOneBlog)
 router
   .route('/:blogId')
   .get(getOneBlog)
