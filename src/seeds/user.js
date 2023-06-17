@@ -1,18 +1,11 @@
-import bcrypt from 'bcrypt'
 import User from '../database/userModal.js'
 
 export const createUserSeeding = async () => {
-  const salt = await bcrypt.genSalt()
-  const password = await bcrypt.hash('lorem12345', salt)
-  const user = await User.findOneAndUpdate(
-    { email: 'john1@gmail.com' },
-    {
-      email: 'john1@gmail.com',
-      password,
-      userName: 'doe1'
-    },
-    { upsert: true, new: true }
-  )
+  const user = await User.create({
+    email: process.env.ADMIN_EMAIL,
+    password: 'Lorem12345',
+    userName: 'doe'
+  })
 
-  return user
+  if (user) return user
 }

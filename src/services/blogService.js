@@ -1,22 +1,8 @@
-import Redis from 'redis'
 import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
-const client = Redis.createClient({
-  legacyMode: true,
-  socket: {
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT
-  },
-  password: process.env.REDIS_PASSWORD
-})
-client.on('connect', () => {
-  console.log('Connected to redis server!')
-})
-const connect = async () => {
-  await client.connect()
-}
-connect()
+import { client } from '../database/redisClient.js'
+
 const getAllBlogsService = async (req) => {
   const allBlogs = await fetchByParams(req.query)
   return {

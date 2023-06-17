@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "nodemon main",
     "start": "node main --omit=dev",
-    "seed:dev": "node src/seeds",
-    "test": "pnpm seed:dev && c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
+    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
   },
   "keywords": [],
   "author": "",

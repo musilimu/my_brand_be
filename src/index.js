@@ -7,7 +7,12 @@ import cors from 'cors'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
 import { v1MessageRouter } from './v1/routes/messages.js'
-// import User from './database/userModal.js'
+import { client } from './database/redisClient.js'
+const connect = async () => {
+  await client.connect()
+}
+await connect()
+
 const RedisStore = connectRedis(session)
 const app = express.Router()
 
@@ -36,7 +41,6 @@ mongoose
     useNewUrlParser: true
   })
   .then(() => console.log('connected to db'))
-// console.log(await User.deleteMany())
 
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)

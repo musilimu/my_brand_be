@@ -1,21 +1,21 @@
+import crypto from 'crypto'
 import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
 import server from '../main.js'
 import { after, before, describe, it } from 'mocha'
-import crypto from 'crypto'
 import User from '../src/database/userModal.js'
+import Blog from '../src/database/blogsModal.js'
 
-let token, message/*, userId, blog, comments */
-
+let token, message
 chai.use(chaiHttp)
 
-describe('Testing /api/v1/auth/ message routes', () => {
+describe('# Testing /api/v1/auth/', () => {
   before((done) => {
     chai
       .request(server)
       .post('/api/v1/auth/signup')
       .send({
-        email: 'john1@gmail.com',
+        email: 'john@gmail.com',
         password: 'lorem12345',
         userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
       }).end((err, res) => {
@@ -25,7 +25,7 @@ describe('Testing /api/v1/auth/ message routes', () => {
           .request(server)
           .post('/api/v1/auth/login')
           .send({
-            email: 'john1@gmail.com',
+            email: 'john@gmail.com',
             password: 'lorem12345'
           })
           .end((err, res) => {
@@ -38,6 +38,7 @@ describe('Testing /api/v1/auth/ message routes', () => {
   })
   after(async () => {
     await User.deleteMany()
+    await Blog.deleteMany()
   })
   it('posting message', (done) => {
     chai
@@ -51,50 +52,82 @@ describe('Testing /api/v1/auth/ message routes', () => {
         message: 'reply quickly no dalay man'
       })
       .end((err, res) => {
-        if (err) console.err(err)
-        message = res.body.data
+        if (err) console.error(err)
 
-        expect(res.body.statusCode).to.equal(201)
-        expect(res.body).to.an('object')
+        message = res.body.data._id
+        expect(res).to.have.status(201)
+        expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('data')
-        expect(res.body.data).to.be.a('object')
+        expect(res.body.data).to.be.an('object')
         done()
       })
   })
 
-  it('getting messages', (done) => {
+  it('getting all messages', (done) => {
     chai
       .request(server)
       .get('/api/v1/messages')
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
-        if (err) console.err(err)
+        if (err) console.error(err)
+
         expect(res).to.have.status(200)
-        expect(res.body).to.an('object')
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('data')
+        expect(res.body.data).to.be.an('array')
+        done()
+      })
+  })
+
+  it('getting a single message', (done) => {
+    chai
+      .request(server)
+      .get(`/api/v1/messages/${message}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.error(err)
+
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('data')
         done()
       })
   })
-  it('getting single message', (done) => {
+
+  it('updating a single message', (done) => {
     chai
       .request(server)
-      .get(`/api/v1/messages/${message._id}`)
+      .put(`/api/v1/messages/${message}`)
       .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'uwi',
+        email: 'uwi@gmail.com',
+        subject: 'help on bug',
+        message: 'help on bug fix'
+      })
       .end((err, res) => {
-        if (err) console.err(err)
-        expect(res.body).to.an('object')
+        if (err) console.error(err)
+
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('data')
+        expect(res.body.data).to.be.an('object')
         done()
       })
   })
-  it('deleting single message', (done) => {
+
+  it('deleting a single message', (done) => {
     chai
       .request(server)
-      .delete(`/api/v1/messages/${message._id}`)
+      .delete(`/api/v1/messages/${message}`)
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
-        if (err) console.err(err)
-        expect(res.body).to.an('object')
+        if (err) console.error(err)
+
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('message')
+        expect(res.body.message).to.be.a('string')
         done()
       })
   })
