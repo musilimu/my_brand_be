@@ -25,7 +25,7 @@ const options = {
     ],
     swagger: '3.0'
   },
-  apis: ['./src/controllers/*.js', './src/database/*.js']
+  apis: ['./docs/*.yaml']
 }
 
 const swaggerSpec = swaggerJSDoc(options)

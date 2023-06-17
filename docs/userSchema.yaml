@@ -1,0 +1,78 @@
+components:
+  schemas:
+    CreateUserInput:
+      type: object
+      required:
+        - userName
+        - email
+        - password
+      properties:
+        userName:
+          type: string
+          default: muslim
+        email:
+          type: string
+          default: muslim@gmail.com
+        password:
+          type: string
+          default: 11b1GCAYA
+
+    profileInput:
+      type: object
+      properties:
+        phone:
+          type: string
+          default: 0791160178
+        address:
+          type: string
+          default: Ngoma - Remera
+        avatar:
+          type: string
+          default: data:imagepng;base64,AABGCAYAAABxLuKEAAAACXBIWXMAAAsTAAALEwEAm==
+    CommentBlogInput:
+      type: object
+      required:
+        - comment
+      properties:
+        comment:
+          type: string
+          default: 👍 I love it
+    CreateBlogResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            banner:
+              type: string
+            createdAt:
+              type: string
+            author:
+              type: string
+            updatedAt:
+              type: string
+            _id:
+              type: string
+
+    blog:
+      type: object
+      required:
+        - title
+        - banner
+        - author
+        - body
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        banner:
+          type: string
+        author:
+          type: string

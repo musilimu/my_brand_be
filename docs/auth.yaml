@@ -1,0 +1,77 @@
+/api/v1/auth/signup:
+  post:
+    summary: create your account for our blog
+    tags: [auth routes]
+    requestBody:
+      description: please fill all required fields
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateUserInput'
+    responses:
+      '201':
+        description: user account created successfully
+
+/api/v1/auth/login:
+  post:
+    summary: create your account for our blog
+    tags: [auth routes]
+    requestBody:
+      description: please fill all required fields
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateUserInput'
+    responses:
+      '201':
+        description: logged in successfully
+
+/api/v1/auth/users:
+  get:
+    summary: get all users
+    tags: [auth routes]
+    responses:
+      '201':
+        description: returns list of all users
+      '401':
+        description: Error try loggin first
+
+/api/v1/auth/users/{userId}:
+  delete:
+    tags: [auth routes]
+    summary: deleting a one user, should provide userId from our database
+    parameters:
+      - name: userId
+        in: path
+        description: provide userId
+        required: true
+    responses:
+      200:
+        description: success
+      401:
+        description: not found
+  put:
+    summary: add user profile and update it
+    tags: [auth routes]
+    parameters:
+      - name: userId
+        in: path
+        description: provide userId
+        required: true
+    requestBody:
+      description: please fill all required fields
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/profileInput'
+    responses:
+      '201':
+        description: Commented successfuly
+# /api/v1/auth/users/{userId}:
+# 87.48 |    62.74 |     100 |   87.48 |
+# 86.29 |    66.88 |   97.72 |   86.29 |
+# 88.55 |    69.65 |   97.36 |   88.55 |
+# 91.46 |    72.14 |   96.96 |   91.46 |

@@ -1,0 +1,58 @@
+/api/v1/messages:
+  get:
+    tags: [message routes]
+    description: <p>returns all messages from our database</p> (you can also add query to filter your messages <strong>/api/v1/messages?sort=created_at:asc&limit=10&offset=0&search=javascript&fields=title,body,banner</strong>)<h3>sorting </h3><p> ascending <strong>/api/v1/messages?sort=created_at:asc</strong></p><p>descending <strong>/api/v1/messages?sort=created_at:desc</strong></p><p> <h3>return fields</h3><p>you may not need all fields filter what you need</p><p><strong>/api/v1/messages?fields=title,body,banner</strong></p><h3>limit the number of messages</h3><p>limit the length of the response (number of messages)</p><p><strong>/api/v1/messages?limit=10</strong></p>[those queries are optional put them according to your choise, add more as shown above]</p>
+    responses:
+      200:
+        description: messages get all messages from our api
+
+  post:
+    summary: create new message
+    tags: [message routes]
+    requestBody:
+      description: please fill all required fields
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageInput'
+    responses:
+      '201':
+        description: Created
+
+/api/v1/messages/{messageId}:
+  get:
+    tags: [message routes]
+    summary: returns a one message should provide messageId from our database
+    parameters:
+      - name: messageId
+        in: path
+        description: provide messageId
+        required: true
+    responses:
+      200:
+        description: success
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/message'
+      404:
+        description: not found
+
+  delete:
+    tags: [message routes]
+    summary: deleting a one message, should provide messageId from our database
+    parameters:
+      - name: messageId
+        in: path
+        description: provide messageId
+        required: true
+    responses:
+      200:
+        description: success
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/message'
+      404:
+        description: not found

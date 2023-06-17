@@ -1,0 +1,39 @@
+components:
+  schemas:
+    MessageInput:
+      type: object
+      required:
+        - name
+        - email
+        - subject
+        - message
+      properties:
+        name:
+          type: string
+          default: muslim
+        email:
+          type: string
+          default: muslim@gmail.com
+        subject:
+          type: string
+          default: hiring you
+        message:
+          type: string
+          default: contact me as soon as possible
+
+    message:
+      type: object
+      required:
+        - name
+        - email
+        - subject
+        - message
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string

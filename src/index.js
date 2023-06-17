@@ -36,6 +36,7 @@ app.use(
 app.use(express.json())
 app.use(express.static('public'))
 mongoose.set('strictQuery', true)
+mongoose.set('strictPopulate', false)
 mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true

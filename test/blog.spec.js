@@ -5,7 +5,9 @@ import server from '../main.js'
 import User from '../src/database/userModal.js'
 import { dommyBlog } from '../src/seeds/blog.js'
 import Blog from '../src/database/blogsModal.js'
-let token, blog, comments/*, userId */
+import { STATUSCODE } from '../src/utils/statusCodes.js'
+import { Comment } from '../src/database/CommentSchema.js'
+let token, blog, comments /*, userId */
 
 describe('# Testing GET /api/v1/blogs/ ', () => {
   before((done) => {
@@ -15,8 +17,10 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
       .send({
         email: 'john@gmail.com',
         password: 'lorem12345',
-        userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
-      }).end((err, res) => {
+        userName:
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
+      })
+      .end((err, res) => {
         if (err) console.err(err)
 
         chai
@@ -37,8 +41,9 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
   after(async () => {
     await User.deleteMany()
     await Blog.deleteMany()
+    await Comment.deleteMany()
   })
-  it('# Testing POST /api/v1/blogs/', (done) => {
+  it('admin should be able to post a blogs', (done) => {
     chai
       .request(server)
       .post('/api/v1/blogs')
@@ -54,6 +59,7 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
         done()
       })
   })
+
   it('get all blogs', (done) => {
     chai
       .request(server)
@@ -101,6 +107,18 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
         done()
       })
   })
+  it('should be able to unlike a single blog', (done) => {
+    chai
+      .request(server)
+      .post(`/api/v1/blogs/${blog._id}/likes`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.err(err)
+        expect(res).to.have.status(STATUSCODE.OK)
+        expect(res.body).to.an('object')
+        done()
+      })
+  })
   it('commenting on a single blog', (done) => {
     chai
       .request(server)
@@ -109,8 +127,8 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
       .send({ text: 'testing comment' })
       .end((err, res) => {
         if (err) console.err(err)
-        comments = res.body.data.comments[0]
 
+        comments = res.body.data.comments[0]
         expect(res).to.have.status(200)
         expect(res.body).to.an('object')
         done()
@@ -119,12 +137,11 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
   it('liking a comment of a single blog', (done) => {
     chai
       .request(server)
-      .post(`/api/v1/blogs/${blog._id}/comments/${comments._id}/likes`)
+      .post(`/api/v1/blogs/${comments.blog}/comments/${comments._id}/likes`)
       .set('Authorization', `Bearer ${token}`)
       .send({ text: 'testing comment' })
       .end((err, res) => {
         if (err) console.err(err)
-
         expect(res).to.have.status(200)
         expect(res.body).to.an('object')
         done()
@@ -155,7 +172,9 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
 
         expect(res).to.have.status(200)
         expect(res.body).to.an('object')
-        expect(res.body).to.have.property('message').to.equal('updated a blog successfully')
+        expect(res.body)
+          .to.have.property('message')
+          .to.equal('updated a blog successfully')
         done()
       })
   })
@@ -170,7 +189,9 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
 
         expect(res).to.have.status(200)
         expect(res.body).to.an('object')
-        expect(res.body).to.have.property('message').equal('deleted a blog successfully')
+        expect(res.body)
+          .to.have.property('message')
+          .equal('deleted a blog successfully')
         done()
       })
   })

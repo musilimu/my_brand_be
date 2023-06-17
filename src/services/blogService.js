@@ -2,6 +2,7 @@ import Blog from '../database/blogsModal.js'
 import { validateBlog, updatingSchema } from '../database/blogSchema.js'
 import { LikeModal } from '../database/LikeSchema.js'
 import { client } from '../database/redisClient.js'
+import { BlogError } from '../controllers/blogController.js'
 
 const getAllBlogsService = async (req) => {
   const allBlogs = await fetchByParams(req.query)
@@ -89,7 +90,11 @@ const getOneBlogSevice = async (blogId, req) => {
 
 const postOneBlogSevice = async (blog, req) => {
   if (process.env.ADMIN_EMAIL !== req.user.email) {
-    throw new Error('only admin can create a blog')
+    throw new BlogError({
+      error: 'un authorized',
+      message: 'only admin can create a blog',
+      statusCode: 401
+    })
   }
   const { error, value } = await validateBlog.validate(blog)
   if (error) {
@@ -97,7 +102,6 @@ const postOneBlogSevice = async (blog, req) => {
   }
 
   const createdBlog = new Blog({ ...value, author: req.user.id })
-  // client.flushAll()
   await createdBlog.save()
   return {
     statusCode: 201,
@@ -122,17 +126,23 @@ const updateOneBlogSevice = async (blogId, req) => {
 
 const postCommentSevice = async (req) => {
   if (req.body.text.trim() === '') throw new Error('please provide content')
-  const blog = await Blog.findById(req.params.blogId)
-  blog.comments = [
-    ...blog?.comments,
-    {
-      user: req.user.id,
-      text: req.body.text
-    }
-  ]
 
-  await blog.save()
-  return { message: 'updated a blog successfully', data: blog }
+  const blog = await Blog.findByIdAndUpdate(req.params.blogId, {
+    $push: {
+      comments: [
+        {
+          blog: req.params.blogId,
+          text: req.body.text,
+          user: req.user.id
+        }
+      ]
+    }
+  })
+  const newblog = await Blog.findById(req.params.blogId).populate('Comments')
+  return {
+    message: 'updated a blog successfully',
+    data: newblog
+  }
 }
 
 const likeBlogSevice = async (req) => {
@@ -157,14 +167,22 @@ const deleteOneBlogSevice = async (blogId, req) => {
 }
 const likeCommentService = async (req) => {
   const blog = await Blog.findById(req.params.blogId)
-  const comment = blog.comments.find(({ _id }) => _id === req.params.commentId)
-  if (comment.likes.includes(req.user.id)) {
-    comment.likes.splice(comment.likes.indexOf(comment.likes), 1)
+  const data = await blog.comments.find((b) => b.id === req.params.commentId)
+  const alreadyExistingUserLike = data.likes.find((like) => {
+    console.log(like.user.toString(), req.user.id)
+    return like.user.toString() === req.user.id
+  })
+  if (alreadyExistingUserLike) {
+    await alreadyExistingUserLike.remove()
   } else {
-    comment.likes = [...comment.likes, req.user.id]
+    data.likes.push({
+      user: req.user.id,
+      comment: req.params.commentId
+    })
   }
   await blog.save()
-  return { message: 'updated a blog successfully', data: blog }
+
+  return { message: 'updated a comment successfully', data: blog }
 }
 
 const deleteCommentService = async (req) => {
