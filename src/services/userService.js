@@ -17,8 +17,8 @@ const createUserService = async (user) => {
       message: 'user account created successfully',
       data: {
         email,
-        _id: user.id
-      }
+        _id: user.id,
+      },
     }
   }
 }
@@ -28,7 +28,7 @@ const getAllUsersService = async (req) => {
     return {
       statusCode: 200,
       message: 'all users sent  successfully',
-      data: JSON.parse(data)
+      data: JSON.parse(data),
     }
   }
 
@@ -38,7 +38,7 @@ const getAllUsersService = async (req) => {
   return {
     statusCode: 200,
     message: 'all users sent  successfully',
-    data: users
+    data: users,
   }
 }
 const getSingleUserService = async (req) => {
@@ -49,19 +49,19 @@ const getSingleUserService = async (req) => {
     return {
       statusCode: 200,
       message: `user ${req.params.userId} sent  successfully`,
-      data: JSON.parse(data)
+      data: JSON.parse(data),
     }
   }
   const user = await User.findById(req.params.userId, {
     password: 0,
-    __v: 0
+    __v: 0,
   })
   await client.set(req.params.userId, JSON.stringify(user))
 
   return {
     statusCode: 200,
     message: `user ${req.params.userId} sent  successfully`,
-    data: user
+    data: user,
   }
   // } catch (error) {
   //   console.log(error)
@@ -80,8 +80,8 @@ const loginUserSevice = async (body) => {
         email,
         _id: user.id,
         permision: [process.env.ADMIN_EMAIL === user.email && 'admin'],
-        token: await generateJWT(user.id)
-      }
+        token: await generateJWT(user.id),
+      },
     }
   }
   throw new Error('account not found')
@@ -93,7 +93,7 @@ const generateJWT = async (id) => {
     return data
   }
   const token = jwt.sign({ id }, process.env.MY_SUPER_SECRET, {
-    expiresIn: '5d'
+    expiresIn: '5d',
   })
   await client.setEx(`token ${id}`, 5 * 24 * 60 * 60, token)
 
@@ -117,7 +117,9 @@ const updateUsersService = async (req) => {
     throw new Error(error.message)
   }
 
-  for (const val in value) { user[val] = value[val] }
+  for (const val in value) {
+    user[val] = value[val]
+  }
 
   await user.save()
   return user
@@ -129,5 +131,5 @@ export {
   getSingleUserService,
   generateJWT,
   getAllUsersService,
-  deleteUsersService
+  deleteUsersService,
 }

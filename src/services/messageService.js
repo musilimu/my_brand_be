@@ -8,7 +8,12 @@ const getAllMessagesService = async (req) => {
   return {
     statusCode: 200,
     message: 'List of all messages from our database',
-    data: process.env.ADMIN_EMAIL === req.user.email ? allMessages : allMessages.filter(({ email }) => email.trim() === req.user.email.trim())
+    data:
+      process.env.ADMIN_EMAIL === req.user.email
+        ? allMessages
+        : allMessages.filter(
+            ({ email }) => email.trim() === req.user.email.trim(),
+          ),
   }
 }
 
@@ -38,8 +43,10 @@ const fetchByParams = async (query) => {
     return allMessages
   } else {
     const data = await Message.find(
-      { $or: [{ subject: new RegExp(search) }, { message: new RegExp(search) }] },
-      returnFields
+      {
+        $or: [{ subject: new RegExp(search) }, { message: new RegExp(search) }],
+      },
+      returnFields,
     )
       .sort({ createdAt: sortMessages(sort) })
       .skip(+offset)
@@ -65,14 +72,14 @@ const getOneMessageSevice = async (messageId, req) => {
     return {
       statusCode: 200,
       message: `Message ${messageId} from our database`,
-      data: message
+      data: message,
     }
   } else {
     const message = await Message.findById(messageId, returnFields)
     return {
       statusCode: 200,
       message: `Message ${messageId} from our database`,
-      data: req.user.email.trim() === message.email.trim() ? message : null
+      data: req.user.email.trim() === message.email.trim() ? message : null,
     }
   }
 }
@@ -89,7 +96,7 @@ const postOneMessageSevice = async (message) => {
   return {
     statusCode: 201,
     message: `created a Message ${createdMessage._id}  successfully`,
-    data: createdMessage
+    data: createdMessage,
   }
 }
 
@@ -97,16 +104,31 @@ const deleteOneMessageSevice = async (messageId, req) => {
   try {
     const deleteMessage = await Message.findById(messageId)
 
-    if (req.user.email !== deleteMessage.email && req.user.email !== process.env.ADMIN_EMAIL) {
-      return { error: 'deleted a message not allowed', statusCode: 400, details: 'you must be the owner to delete the message ' }
+    if (
+      req.user.email !== deleteMessage.email &&
+      req.user.email !== process.env.ADMIN_EMAIL
+    ) {
+      return {
+        error: 'deleted a message not allowed',
+        statusCode: 400,
+        details: 'you must be the owner to delete the message ',
+      }
     }
 
     if (req.user.email !== process.env.ADMIN_EMAIL) {
-      return { error: 'deleted a message not allowed', statusCode: 400, details: 'you must be the owner to delete the message or admin' }
+      return {
+        error: 'deleted a message not allowed',
+        statusCode: 400,
+        details: 'you must be the owner to delete the message or admin',
+      }
     }
 
     const data = await Message.deleteOne({ _id: messageId })
-    return { message: 'deleted a message successfully', statusCode: 200, data }
+    return {
+      message: 'deleted a message successfully',
+      statusCode: 200,
+      data,
+    }
   } catch (error) {
     console.log(error.message)
   }
@@ -115,12 +137,23 @@ const updateOneMessageService = async (messageId, req) => {
   try {
     const updateMessage = await Message.findById(messageId)
 
-    if (req.user.email !== updateMessage.email && req.user.email !== process.env.ADMIN_EMAIL) {
-      return { error: 'updated a message not allowed', statusCode: 400, details: 'you must be the owner to update the message ' }
+    if (
+      req.user.email !== updateMessage.email &&
+      req.user.email !== process.env.ADMIN_EMAIL
+    ) {
+      return {
+        error: 'updated a message not allowed',
+        statusCode: 400,
+        details: 'you must be the owner to update the message ',
+      }
     }
 
     if (req.user.email !== process.env.ADMIN_EMAIL) {
-      return { error: 'updated a message not allowed', statusCode: 400, details: 'you must be the owner to update the message or admin' }
+      return {
+        error: 'updated a message not allowed',
+        statusCode: 400,
+        details: 'you must be the owner to update the message or admin',
+      }
     }
     const { error, value } = await validateMessage.validate(req.body)
 
@@ -128,7 +161,11 @@ const updateOneMessageService = async (messageId, req) => {
       throw new Error(error.details[0].message)
     }
     const data = await Message.findByIdAndUpdate(messageId, value)
-    return { message: 'updated a message successfully', statusCode: 200, data }
+    return {
+      message: 'updated a message successfully',
+      statusCode: 200,
+      data,
+    }
   } catch (error) {
     console.log(error.message)
   }
@@ -139,5 +176,5 @@ export {
   getOneMessageSevice,
   deleteOneMessageSevice,
   postOneMessageSevice,
-  updateOneMessageService
+  updateOneMessageService,
 }

@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const PORT = process.env.port || 3000
 
-function errHandler (err, req, res, next) {
+function errHandler(err, req, res, next) {
   if (err instanceof BlogError) return res.status(err.statusCode).json(err)
   res.status(500).json({ error: 'unexpected error', message: err.message })
 }

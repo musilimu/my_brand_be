@@ -7,26 +7,26 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: [true, 'email is required.'],
-      unique: true
+      unique: true,
     },
     userName: {
       type: String,
       required: [true, 'userName is required.'],
-      unique: true
+      unique: true,
     },
     uid: { type: String, default: () => Math.random() },
     password: {
       type: String,
       required: [true, 'password is required.'],
-      minLength: 6
+      minLength: 6,
     },
     avatar: String,
     phone: String,
-    address: String
+    address: String,
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 UserSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10)

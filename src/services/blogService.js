@@ -9,7 +9,7 @@ const getAllBlogsService = async (req) => {
   return {
     statusCode: 200,
     message: 'List of all blogs from our database',
-    data: allBlogs
+    data: allBlogs,
   }
 }
 const sortBlogs = (sortStr = 'created_at:asc') => {
@@ -37,8 +37,10 @@ const fetchByParams = async (query) => {
     return allBlogs
   } else {
     const data = await Blog.find(
-      { $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }] },
-      returnFields
+      {
+        $or: [{ title: new RegExp(search) }, { body: new RegExp(search) }],
+      },
+      returnFields,
     )
       .sort({ createdAt: sortBlogs(sort) })
       .skip(+offset)
@@ -75,7 +77,7 @@ const getOneBlogSevice = async (blogId, req) => {
     return {
       statusCode: 200,
       message: `blog ${blogId} from our database`,
-      data: blog
+      data: blog,
     }
   } else {
     const blog = await Blog.findById(blogId, returnFields)
@@ -83,7 +85,7 @@ const getOneBlogSevice = async (blogId, req) => {
     return {
       statusCode: 200,
       message: `blog ${blogId} from our database`,
-      data: blog
+      data: blog,
     }
   }
 }
@@ -93,7 +95,7 @@ const postOneBlogSevice = async (blog, req) => {
     throw new BlogError({
       error: 'un authorized',
       message: 'only admin can create a blog',
-      statusCode: 401
+      statusCode: 401,
     })
   }
   const { error, value } = await validateBlog.validate(blog)
@@ -106,7 +108,7 @@ const postOneBlogSevice = async (blog, req) => {
   return {
     statusCode: 201,
     message: `created a blog ${createdBlog._id}  successfully`,
-    data: createdBlog
+    data: createdBlog,
   }
 }
 
@@ -133,27 +135,27 @@ const postCommentSevice = async (req) => {
         {
           blog: req.params.blogId,
           text: req.body.text,
-          user: req.user.id
-        }
-      ]
-    }
+          user: req.user.id,
+        },
+      ],
+    },
   })
   const newblog = await Blog.findById(req.params.blogId).populate('Comments')
   return {
     message: 'updated a blog successfully',
-    data: newblog
+    data: newblog,
   }
 }
 
 const likeBlogSevice = async (req) => {
   const res = await LikeModal.create({
     user: req.user.id,
-    blog: req.params.blogId
+    blog: req.params.blogId,
   })
   return {
     statusCode: 200,
     message: `update (liked) a blog ${req.params.blogId}  successfully`,
-    data: res
+    data: res,
   }
 }
 
@@ -177,7 +179,7 @@ const likeCommentService = async (req) => {
   } else {
     data.likes.push({
       user: req.user.id,
-      comment: req.params.commentId
+      comment: req.params.commentId,
     })
   }
   await blog.save()
@@ -192,7 +194,7 @@ const deleteCommentService = async (req) => {
 
   const blog = await Blog.findById(req.params.blogId)
   const comments = blog.comments.filter(
-    ({ _id }) => _id !== req.params.commentId
+    ({ _id }) => _id !== req.params.commentId,
   )
   blog.comments = comments
   await blog.save()
@@ -200,7 +202,7 @@ const deleteCommentService = async (req) => {
     statusCode: 200,
     message:
       '`deleted a comment successfully` => updated a blog by removing a comment',
-    data: blog
+    data: blog,
   }
 }
 
@@ -214,5 +216,5 @@ export {
   getLikesServive,
   postCommentSevice,
   likeBlogSevice,
-  likeCommentService
+  likeCommentService,
 }

@@ -17,8 +17,10 @@ describe('# Testing /api/v1/auth/', () => {
       .send({
         email: 'john@gmail.com',
         password: 'lorem12345',
-        userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
-      }).end((err, res) => {
+        userName:
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', ''),
+      })
+      .end((err, res) => {
         if (err) console.err(err)
 
         chai
@@ -26,7 +28,7 @@ describe('# Testing /api/v1/auth/', () => {
           .post('/api/v1/auth/login')
           .send({
             email: 'john@gmail.com',
-            password: 'lorem12345'
+            password: 'lorem12345',
           })
           .end((err, res) => {
             if (err) console.err(err)
@@ -49,7 +51,7 @@ describe('# Testing /api/v1/auth/', () => {
         name: 'muslim',
         email: 'uwimuslim@gmail.dev',
         subject: 'lorem test',
-        message: 'reply quickly no dalay man'
+        message: 'reply quickly no dalay man',
       })
       .end((err, res) => {
         if (err) console.error(err)
@@ -103,7 +105,7 @@ describe('# Testing /api/v1/auth/', () => {
         name: 'uwi',
         email: 'uwi@gmail.com',
         subject: 'help on bug',
-        message: 'help on bug fix'
+        message: 'help on bug fix',
       })
       .end((err, res) => {
         if (err) console.error(err)

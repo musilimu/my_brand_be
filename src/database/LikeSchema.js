@@ -8,16 +8,16 @@ const LikeSchema = new Schema(
   {
     user: {
       type: ObjectId,
-      ref: 'Users'
+      ref: 'Users',
     },
     blog: {
       type: ObjectId,
-      ref: 'Blogs'
-    }
+      ref: 'Blogs',
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 LikeSchema.pre('save', async function (next) {
@@ -26,7 +26,7 @@ LikeSchema.pre('save', async function (next) {
     await like.delete()
     throw new BlogError({
       message: 'you unliked this blog post',
-      statusCode: STATUSCODE.OK
+      statusCode: STATUSCODE.OK,
     })
   } else {
     next()

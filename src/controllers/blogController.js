@@ -8,7 +8,7 @@ import {
   postCommentSevice,
   likeBlogSevice,
   likeCommentService,
-  deleteCommentService
+  deleteCommentService,
 } from '../services/blogService.js'
 
 export const asyncHandler = (fn) => {
@@ -22,7 +22,7 @@ export const asyncHandler = (fn) => {
 }
 
 export class BlogError extends Error {
-  constructor ({ statusCode = 400, message, error }) {
+  constructor({ statusCode = 400, message, error }) {
     super()
     this.message = message
     this.statusCode = statusCode
@@ -87,5 +87,5 @@ export {
   postComment,
   likeBlog,
   likeComment,
-  deleteComment
+  deleteComment,
 }

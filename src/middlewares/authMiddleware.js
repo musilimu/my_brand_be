@@ -7,7 +7,7 @@ const secureRoute = async (req, res, next) => {
     error: 'not authorized',
     JWTtoken: req.headers.authorization,
     details: 'JWT is expired  and not acceptable',
-    statusCode: 403
+    statusCode: 403,
   }
   if (req.headers.authorization?.startsWith('Bearer')) {
     try {
@@ -21,7 +21,7 @@ const secureRoute = async (req, res, next) => {
         error: 'not authorized',
         statusCode: 401,
         details:
-          "try provide your JWT go to `http:localhost:3000/api/v1/auth/login` or create an account if you don't have one."
+          "try provide your JWT go to `http:localhost:3000/api/v1/auth/login` or create an account if you don't have one.",
       })
     } catch (err) {
       res.status(403).json(errorRes)
@@ -32,7 +32,7 @@ const secureRoute = async (req, res, next) => {
     error: 'not authorized',
     statusCode: 401,
     details:
-      "try provide your JWT go to `http:localhost:3000/api/v1/auth/login` or create an account if you don't have one."
+      "try provide your JWT go to `http:localhost:3000/api/v1/auth/login` or create an account if you don't have one.",
   })
 }
 

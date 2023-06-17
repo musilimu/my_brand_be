@@ -6,7 +6,7 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'blog api',
-      version: '1.0.0'
+      version: '1.0.0',
     },
     components: {
       securitySchemes: {
@@ -14,18 +14,18 @@ const options = {
           type: 'http',
           scheme: 'bearer',
           in: 'header',
-          bearerFormat: 'JWT'
-        }
-      }
+          bearerFormat: 'JWT',
+        },
+      },
     },
     security: [
       {
-        jwt: []
-      }
+        jwt: [],
+      },
     ],
-    swagger: '3.0'
+    swagger: '3.0',
   },
-  apis: ['./docs/*.yaml']
+  apis: ['./docs/*.yaml'],
 }
 
 const swaggerSpec = swaggerJSDoc(options)
@@ -33,9 +33,9 @@ const responseJSON = {
   statusCode: 404,
   error: 'route not found',
   message: 'route not available',
-  detail: 'check for another route or try again'
+  detail: 'check for another route or try again',
 }
-export default function swagger (app, port) {
+export default function swagger(app, port) {
   app.use('/api/v1/docs', SwaggerUi.serve, SwaggerUi.setup(swaggerSpec))
   app.use((req, res) => {
     res.status(404).json(responseJSON)

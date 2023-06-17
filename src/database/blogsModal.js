@@ -7,7 +7,7 @@ const BlogSchema = new Schema(
     author: {
       type: ObjectId,
       required: [true, 'please provide the author'],
-      ref: 'Users'
+      ref: 'Users',
     },
     title: String,
     body: String,
@@ -15,12 +15,12 @@ const BlogSchema = new Schema(
     likes: Object,
     comments: {
       type: [CommentSchema],
-      refPath: 'Comments'
-    }
+      refPath: 'Comments',
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 const Blog = mongoose.model('Blogs', BlogSchema)

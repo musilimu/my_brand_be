@@ -18,7 +18,7 @@ describe('Testing /api/v1/auth/ message routes', () => {
         email: 'john1@gmail.com',
         password: 'lorem12345',
         userName:
-          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', ''),
       })
       .end((err, res) => {
         if (err) console.err(err)
@@ -28,7 +28,7 @@ describe('Testing /api/v1/auth/ message routes', () => {
           .post('/api/v1/auth/login')
           .send({
             email: 'john1@gmail.com',
-            password: 'lorem12345'
+            password: 'lorem12345',
           })
           .end((err, res) => {
             if (err) console.err(err)
@@ -50,7 +50,7 @@ describe('Testing /api/v1/auth/ message routes', () => {
         name: 'muslim',
         email: 'uwimuslim@gmail.dev',
         subject: 'lorem test',
-        message: 'reply quickly no dalay man'
+        message: 'reply quickly no dalay man',
       })
       .end((err, res) => {
         if (err) console.err(err)

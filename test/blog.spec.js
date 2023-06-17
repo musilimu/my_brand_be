@@ -18,7 +18,7 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
         email: 'john@gmail.com',
         password: 'lorem12345',
         userName:
-          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', ''),
       })
       .end((err, res) => {
         if (err) console.err(err)
@@ -28,7 +28,7 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
           .post('/api/v1/auth/login')
           .send({
             email: 'john@gmail.com',
-            password: 'lorem12345'
+            password: 'lorem12345',
           })
           .end((err, res) => {
             if (err) console.err(err)
