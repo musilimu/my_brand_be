@@ -16,8 +16,10 @@ describe('# Testing user routes', () => {
       .send({
         email: 'john@gmail.com',
         password: 'lorem12345',
-        userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
-      }).end((err, res) => {
+        userName:
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', ''),
+      })
+      .end((err, res) => {
         if (err) console.err(err)
 
         chai
@@ -25,7 +27,7 @@ describe('# Testing user routes', () => {
           .post('/api/v1/auth/login')
           .send({
             email: 'john@gmail.com',
-            password: 'lorem12345'
+            password: 'lorem12345',
           })
           .end((err, res) => {
             if (err) console.err(err)
@@ -96,7 +98,9 @@ describe('# Testing user routes', () => {
 
         expect(res).to.have.status(200)
         expect(res.body).to.an('object')
-        expect(res.body).to.have.property('message').to.equal('users delete successfully')
+        expect(res.body)
+          .to.have.property('message')
+          .to.equal('users delete successfully')
         done()
       })
   })

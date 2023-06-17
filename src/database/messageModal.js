@@ -4,11 +4,11 @@ const MessageSchema = new Schema(
   {
     name: String,
     email: String,
-    subject: String
+    subject: String,
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 const Message = mongoose.model('Messages', MessageSchema)

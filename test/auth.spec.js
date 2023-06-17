@@ -16,7 +16,8 @@ describe('# Testing authentication routes', () => {
     user = {
       email: crypto.randomUUID() + 'john@gmail.com',
       password: 'lorem12345',
-      userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
+      userName:
+        'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', ''),
     }
 
     chai

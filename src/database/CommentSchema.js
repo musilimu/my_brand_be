@@ -7,16 +7,16 @@ const CommentsLikeSchema = new Schema(
     user: {
       type: ObjectId,
       ref: 'Users',
-      unique: true
+      unique: true,
     },
     comment: {
       type: ObjectId,
-      ref: 'Comments'
-    }
+      ref: 'Comments',
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 export const CommentLikes = mongoose.model('CommentLikes', CommentsLikeSchema)
@@ -26,25 +26,25 @@ export const CommentSchema = new Schema(
     user: {
       type: ObjectId,
       ref: 'Users',
-      required: true
+      required: true,
     },
     blog: {
       type: ObjectId,
       ref: 'Blogs',
-      required: true
+      required: true,
     },
     text: {
       type: String,
-      required: true
+      required: true,
     },
     likes: {
       type: [CommentsLikeSchema],
-      refPath: 'CommentLikes'
-    }
+      refPath: 'CommentLikes',
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 export const Comment = mongoose.model('Comments', CommentSchema)

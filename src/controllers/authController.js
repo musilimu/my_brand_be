@@ -4,7 +4,7 @@ import {
   getAllUsersService,
   updateUsersService,
   deleteUsersService,
-  getSingleUserService
+  getSingleUserService,
 } from '../services/userService.js'
 import { asyncHandler } from './blogController.js'
 
@@ -33,7 +33,7 @@ const deteUser = asyncHandler(async (req, res) => {
   res.status(200).json({
     statusCode: 200,
     message: 'users delete successfully',
-    data: user
+    data: user,
   })
 })
 
@@ -42,7 +42,7 @@ const updateUser = asyncHandler(async (req, res) => {
   res.status(200).json({
     statusCode: 200,
     message: 'user updated successfully',
-    data: user
+    data: user,
   })
 })
 export {
@@ -51,5 +51,5 @@ export {
   getAllUsers,
   deteUser,
   updateUser,
-  getSingleUser
+  getSingleUser,
 }

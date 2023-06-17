@@ -12,5 +12,5 @@ export const STATUSCODE = {
   BadGateway: 502,
   ServiceUnavailable: 503,
   UniqueConstraintViolation: 422,
-  ForeignKeyConstraintViolation: 422
+  ForeignKeyConstraintViolation: 422,
 }

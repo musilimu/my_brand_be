@@ -18,7 +18,7 @@ const app = express.Router()
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 }
 
 app.use(cors(corsOptions))
@@ -29,8 +29,8 @@ app.use(
     saveUninitialized: false,
     secret: process.env.MY_SUPER_SECRET,
     cookie: { secure: true },
-    resave: false
-  })
+    resave: false,
+  }),
 )
 
 app.use(express.json())
@@ -39,7 +39,7 @@ mongoose.set('strictQuery', true)
 mongoose.set('strictPopulate', false)
 mongoose
   .connect(process.env.DB_URL, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
   })
   .then(() => console.log('connected to db'))
 

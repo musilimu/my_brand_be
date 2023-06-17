@@ -3,7 +3,7 @@ import {
   getOneMessageSevice,
   deleteOneMessageSevice,
   postOneMessageSevice,
-  updateOneMessageService
+  updateOneMessageService,
 } from '../services/messageService.js'
 import { asyncHandler } from './blogController.js'
 
@@ -30,7 +30,7 @@ const deleteOneMessage = asyncHandler(async (req, res) => {
 const updateOneMessage = asyncHandler(async (req, res) => {
   const deletedMessage = await updateOneMessageService(
     req.params.messageId,
-    req
+    req,
   )
   res.status(200).json(deletedMessage)
 })
@@ -39,5 +39,5 @@ export {
   createOneMessage,
   getAllMessages,
   getOneMessage,
-  updateOneMessage
+  updateOneMessage,
 }

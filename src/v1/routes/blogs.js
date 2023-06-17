@@ -6,7 +6,10 @@ import {
   updateOneBlog,
   getOneBlog,
   getLikes,
-  postComment, likeBlog, likeComment, deleteComment
+  postComment,
+  likeBlog,
+  likeComment,
+  deleteComment,
 } from '../../controllers/blogController.js'
 import secureRoute from '../../middlewares/authMiddleware.js'
 const router = express.Router()

@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon main",
     "start": "node main --omit=dev",
-    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit"
+    "test": "c8 mocha --timeout 10000 --recursive 'test/*.spec.js' --exit",
+    "prettier": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -18,9 +19,11 @@
     "chai-http": "^4.4.0",
     "coverage-badge-creator": "^1.0.17",
     "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.22"
