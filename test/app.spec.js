@@ -5,7 +5,7 @@ import { after, before, describe, it } from 'mocha'
 import crypto from 'crypto'
 import User from '../src/database/userModal.js'
 
-let token, message/*, userId, blog, comments */
+let token, message /*, userId, blog, comments */
 
 chai.use(chaiHttp)
 
@@ -17,8 +17,10 @@ describe('Testing /api/v1/auth/ message routes', () => {
       .send({
         email: 'john1@gmail.com',
         password: 'lorem12345',
-        userName: 'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
-      }).end((err, res) => {
+        userName:
+          'doe' + crypto.randomUUID().substring(0, 20).replaceAll('-', '')
+      })
+      .end((err, res) => {
         if (err) console.err(err)
 
         chai
@@ -95,6 +97,17 @@ describe('Testing /api/v1/auth/ message routes', () => {
       .end((err, res) => {
         if (err) console.err(err)
         expect(res.body).to.an('object')
+        done()
+      })
+  })
+  it('should handle unfound routes', (done) => {
+    chai
+      .request(server)
+      .delete(`/api/v1/rand/${message._id}/random`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        if (err) console.err(err)
+        expect(res).to.have.status(404)
         done()
       })
   })

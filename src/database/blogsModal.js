@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import CommentSchema from './CommentSchema.js'
+import { CommentSchema } from './CommentSchema.js'
 const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
 const BlogSchema = new Schema(
@@ -13,8 +13,10 @@ const BlogSchema = new Schema(
     body: String,
     banner: String,
     likes: Object,
-    comments: [CommentSchema]
-
+    comments: {
+      type: [CommentSchema],
+      refPath: 'Comments'
+    }
   },
   {
     timestamps: true

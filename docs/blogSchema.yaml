@@ -1,0 +1,68 @@
+components:
+  schemas:
+    CreateBlogInput:
+      type: object
+      required:
+        - title
+        - body
+        - banner
+        - author
+      properties:
+        title:
+          type: string
+          default: creative webdeveloper's spider logo
+        body:
+          type: string
+          default: how creative webdeveloper think about spider logo
+        banner:
+          type: string
+          default: data:imagepng;base64,AABGCAYAAABxLuKEAAAACXBIWXMAAAsTAAALEwEAm==
+        author:
+          type: string
+          default: 639c5eba4269042058a38611
+    CommentBlogInput:
+      type: object
+      required:
+        - comment
+      properties:
+        comment:
+          type: string
+          default: 👍 I love it
+    CreateBlogResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            banner:
+              type: string
+            createdAt:
+              type: string
+            author:
+              type: string
+            updatedAt:
+              type: string
+            _id:
+              type: string
+    blog:
+      type: object
+      required:
+        - title
+        - banner
+        - author
+        - body
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        banner:
+          type: string
+        author:
+          type: string
