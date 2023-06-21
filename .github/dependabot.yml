@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "pnpm" # Specify the package ecosystem as pnpm
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily" # Change the interval to "daily" for daily checkups
