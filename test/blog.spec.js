@@ -33,7 +33,7 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
           .end((err, res) => {
             if (err) console.err(err)
             token = res.body.data.token
-            // userId = res.body.data._id
+
             done()
           })
       })
