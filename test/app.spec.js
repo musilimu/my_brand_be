@@ -5,7 +5,7 @@ import { after, before, describe, it } from 'mocha'
 import crypto from 'crypto'
 import User from '../src/database/userModal.js'
 
-let token, message /*, userId, blog, comments */
+let token, message
 
 chai.use(chaiHttp)
 
@@ -33,7 +33,6 @@ describe('Testing /api/v1/auth/ message routes', () => {
           .end((err, res) => {
             if (err) console.err(err)
             token = res.body.data.token
-            // userId = res.body.data._id
             done()
           })
       })

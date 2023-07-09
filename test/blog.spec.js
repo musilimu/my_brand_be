@@ -7,7 +7,8 @@ import { dommyBlog } from '../src/seeds/blog.js'
 import Blog from '../src/database/blogsModal.js'
 import { STATUSCODE } from '../src/utils/statusCodes.js'
 import { Comment } from '../src/database/CommentSchema.js'
-let token, blog, comments /*, userId */
+
+let token, blog, comments
 
 describe('# Testing GET /api/v1/blogs/ ', () => {
   before((done) => {
@@ -33,7 +34,7 @@ describe('# Testing GET /api/v1/blogs/ ', () => {
           .end((err, res) => {
             if (err) console.err(err)
             token = res.body.data.token
-            // userId = res.body.data._id
+
             done()
           })
       })
