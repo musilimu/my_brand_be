@@ -7,11 +7,6 @@ import cors from 'cors'
 import { v1BlogRouter } from './v1/routes/blogs.js'
 import { v1AuthRouter } from './v1/routes/auth.js'
 import { v1MessageRouter } from './v1/routes/messages.js'
-import { client } from './database/redisClient.js'
-const connect = async () => {
-  await client.connect()
-}
-await connect()
 
 const RedisStore = connectRedis(session)
 const app = express.Router()
@@ -41,7 +36,7 @@ mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
   })
-  .then(() => console.log('connected to db'))
+  .then(() => console.log('connected to mongodb'))
 
 app.use('/api/v1/blogs', v1BlogRouter)
 app.use('/api/v1/auth', v1AuthRouter)
