@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   bcrypt:
     specifier: ^5.1.0
@@ -35,8 +39,8 @@ dependencies:
     specifier: ^9.0.0
     version: 9.0.0
   mongoose:
-    specifier: ^6.11.2
-    version: 6.11.2
+    specifier: ^6.11.3
+    version: 6.11.3
   nodemailer:
     specifier: ^6.9.3
     version: 6.9.3
@@ -3400,8 +3404,8 @@ packages:
       - aws-crt
     dev: false
 
-  /mongoose@6.11.2:
-    resolution: {integrity: sha512-BJHQerozE+qIVdH8Hn9niMVMUzRNcjmwU7hFEzER1+aYtGmVJgGsXBd9wJ9GnrHrbCsYmKlRy8aTuxEdlEtfow==}
+  /mongoose@6.11.3:
+    resolution: {integrity: sha512-M1Y5PjttgV51YDa30u7GVMVypQSlNZF/jUhlzTBAmaz5C9FvOr8eih/VLhhO7xtTSlcVTFQS1dqlQNMbtfUowQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
       bson: 4.7.2
@@ -4486,7 +4490,3 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
