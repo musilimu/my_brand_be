@@ -35,7 +35,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "env-cmd": "^10.1.0",
-    "esbuild": "0.18.11",
+    "esbuild": "0.18.12",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "joi": "^17.9.2",
