@@ -1,7 +1,6 @@
 # Blog API
 
-Welcome to the Blog API! This API provides endpoints to manage user authentication, blog posts, and messages.
-
+This API serves blogs to the client, user can signup, login and logout, create blog posts, comment on blogs, and like them.
 ## Contributing
 
 We welcome contributions to enhance the functionality or fix any issues with the API. To contribute, please follow these steps:
