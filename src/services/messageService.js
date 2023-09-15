@@ -1,4 +1,3 @@
-// import nodemailer from 'nodemailer'
 import Message from '../database/messageModal.js'
 import { validateMessage } from '../database/messageSchema.js'
 import { client } from '../database/redisClient.js'
